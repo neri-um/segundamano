@@ -1,0 +1,71 @@
+<ui:composition template="/WEB-INF/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="title">
+        Ver tablon
+    </ui:define>
+
+	<ui:param name="estilo3" value="current" />
+
+	<ui:define name="content">
+		<div class="row">
+			<div class="col-12">
+				<div class="content">
+
+					<h:form id="formRevision">
+
+						<div
+							style="margin-bottom: 20px; border: 1px solid #ddd; padding: 15px;">
+							<h3>Revisa los mensajes</h3>
+
+							<!-- Mensajes de error -->
+							<p:growl id="growl" showDetail="true" />
+
+							<h:panelGrid columns="2" cellpadding="10" style="width: 100%">
+
+
+
+
+								<h:commandButton value="Filtrar por tablon"
+									action="#{tablonWeb.cargarTablon}"
+									style="margin-left: 15px; background-color: #ddd; color: black; border: 1px solid #999; padding: 5px 10px;">
+
+									<f:ajax execute="@form" render="tablaTablones" />
+								</h:commandButton>
+
+								<label>Selecciona un tablon:</label>
+								<h:selectOneMenu value="#{tablonWeb.idTablon}" required="true"
+									style="padding: 5px; width: 100%;">
+									<f:selectItem itemLabel="-- Elige un tablon --" itemValue="" />
+									<f:selectItems value="#{tablonWeb.tablones}" var="tablon"
+										itemLabel="#{tablon.nombre}" itemValue="#{tablon.id}" />
+								</h:selectOneMenu>
+								
+								<h:dataTable id="tablaTablones" value="#{tablonWeb.tablones}"
+									var="p" styleClass="table table-striped" border="1"
+									cellpadding="10">
+									<h:column>
+										<f:facet name="header">ID</f:facet>
+                                #{p.id}
+                            </h:column>
+									<h:column>
+										<f:facet name="header">Nombre</f:facet>
+                                #{p.nombre}
+                            </h:column>
+								</h:dataTable>
+							</h:panelGrid>
+						</div>
+					</h:form>
+				</div>
+
+
+
+			</div>
+		</div>
+
+	</ui:define>
+</ui:composition>

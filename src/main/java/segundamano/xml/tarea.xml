@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tarea xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="tarea.xsd"
+       id="T-001">
+
+  <nombre>Comprar material</nombre>
+  <descripcion>Comprar folios y bolígrafos</descripcion>
+
+  <estado>PENDIENTE</estado>
+
+</tarea>

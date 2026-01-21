@@ -1,0 +1,25 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="tarea">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="nombre" type="xs:string" />
+				<xs:element name="descripcion" type="xs:string" />
+				<xs:element name="estado" type="tipo_estado" />
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:string"
+				use="required" />
+		</xs:complexType>
+
+	</xs:element>
+	
+	<!-- Tipo Complejo -->
+  <xs:simpleType name="tipo_estado">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="PENDIENTE" />
+      <xs:enumeration value="EN_CURS0" />
+      <xs:enumeration value="EN_REVISION" />
+    </xs:restriction>
+  </xs:simpleType>
+
+
+</xs:schema>
