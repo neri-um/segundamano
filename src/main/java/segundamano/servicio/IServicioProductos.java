@@ -3,6 +3,8 @@ package segundamano.servicio;
 import java.time.LocalDate;
 import java.util.List;
 
+import repositorio.EntidadNoEncontrada;
+import repositorio.RepositorioException;
 import segundamano.modelo.Categoria;
 import segundamano.modelo.Estado;
 import segundamano.modelo.Producto;
@@ -24,20 +26,22 @@ Historial del mes. Esta operación recibe un mes y año y devuelve un listado re
 
 Buscar productos a la venta por categoría, descripción, estado y precio. Recibe como parámetros un identificador de categoría, un texto, un estado y un precio máximo, y devuelve un listado de productos que están a la venta en esa categoría o en alguna categoría que sea descendiente de esta (directa o no), cuyo precio sea menor o igual al indicado, cuyo estado sea igual o mejor al especificado y que contenga el texto en su descripción. Todos los parámetros de búsqueda 
 son opcionales. El orden de los estados de mejor a peor es: nuevo > como nuevo > buen estado > aceptable > para piezas o reparar.
+ * @throws RepositorioException 
  */
 	
 	String altaProducto(String titulo, String descripcion, double precio, Estado estado, Categoria ategoria,
-			boolean envio, Usuario vendedor);
+			boolean envio, Usuario vendedor) throws RepositorioException;
 	
-	void asignarRecogida(String id, double longitud, double latitud, String descripcion);
+	void asignarRecogida(String id, double longitud, double latitud, String descripcion) throws RepositorioException, EntidadNoEncontrada;
 	
-	void modificarProducto(String id, double precio, String descripcion);
+	void modificarProducto(String id, double precio, String descripcion) throws RepositorioException, EntidadNoEncontrada;
 	
-	void añadirVisualizaciones(String id);
-	
-	List<Producto> getByMesAnyo(LocalDate fecha);
-	
-	List <Producto> buscarProductos(Categoria categoria, String descripcion, Estado estado, double precio);
+	void añadirVisualizaciones(String id) throws RepositorioException, EntidadNoEncontrada;
+
+	List<Producto> buscarProductos(String categoriaId, String descripcion, Estado estado, Double precioMax)
+			throws RepositorioException;
+
+	List<ProductoResumen> historialDelMes(int mes, int anio) throws RepositorioException;
 
 
 }

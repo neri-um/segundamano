@@ -16,9 +16,9 @@ import javax.persistence.Table;
 
 import repositorio.Identificable;
 
-@Entity //JPA
+@Entity // JPA
 @Table(name = "productos")
-public class Producto implements Identificable{
+public class Producto implements Identificable {
 	@Id
 	private String id;
 	private String titulo;
@@ -32,21 +32,19 @@ public class Producto implements Identificable{
 	private Categoria categoria;
 	private int visualizaciones = 0;
 	private boolean envio;
-	
-	@ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "lugar_recogida_id")
 	private LugarRecogida lugar;
 	private Usuario vendedor;
-	
-	public Producto() {
-		//JAXB
-	}
-	
 
+	public Producto() {
+		// JAXB
+	}
 
 	public Producto(String titulo, String descripcion, double precio, Estado estado, Categoria categoria, boolean envio,
 			Usuario vendedor) {
-		this.visualizaciones=0;
+		this.visualizaciones = 0;
 		this.titulo = titulo;
 		this.descripcion = descripcion;
 		this.precio = precio;
@@ -56,7 +54,6 @@ public class Producto implements Identificable{
 		this.vendedor = vendedor;
 	}
 
-	
 	// --> GETTERS
 	public String getId() {
 		return id;
@@ -101,50 +98,58 @@ public class Producto implements Identificable{
 	public Usuario getVendedor() {
 		return vendedor;
 	}
-	
+
 	// --> SETTERS
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
-	
+
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-	
+
 	public void setPrecio(double nuevoPrecio) {
 		this.precio = nuevoPrecio;
 	}
-	
+
 	public void setEstado(Estado estado) {
 		this.estado = estado;
 	}
-	
+
 	public void setFechaPublicacion(LocalDateTime fechaPublicacion) {
 		this.fechaPublicacion = fechaPublicacion;
 	}
-	
+
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
 	}
-	
+
 	public void setVisualizaciones(int visualizaciones) {
 		this.visualizaciones = visualizaciones;
 	}
-	
+
 	public void setEnvio(boolean envio) {
 		this.envio = envio;
 	}
-	
+
 	public void setLugar(LugarRecogida lugar) {
 		this.lugar = lugar;
 	}
-	
+
 	public void setVendedor(Usuario vendedor) {
 		this.vendedor = vendedor;
+	}
+
+	@Override
+	public String toString() {
+		return "Producto [id=" + id + ", titulo=" + titulo + ", descripcion=" + descripcion + ", precio=" + precio
+				+ ", estado=" + estado + ", fechaPublicacion=" + fechaPublicacion + ", categoria=" + categoria
+				+ ", visualizaciones=" + visualizaciones + ", envio=" + envio + ", lugar=" + lugar + ", vendedor="
+				+ vendedor + "]";
 	}
 
 }

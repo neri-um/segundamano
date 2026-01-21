@@ -115,6 +115,11 @@ public class Categoria implements Identificable{
 		this.padre = padre;
 		
 	}
+	@Override
+	public String toString() {
+		return "Categoria [id=" + id + ", ruta=" + ruta + ", nombre=" + nombre + ", descripcion=" + descripcion
+				+ ", padre=" + padre + ", subcategorias=" + subcategorias + "]";
+	}
 
 
 	

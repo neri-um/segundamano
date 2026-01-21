@@ -12,7 +12,7 @@ import repositorio.Identificable;
 
 @Entity
 @Table(name = "usuarios")
-public class Usuario implements Identificable{
+public class Usuario implements Identificable {
 	@Id
 	private String id;
 	private String email;
@@ -24,8 +24,9 @@ public class Usuario implements Identificable{
 	private boolean admin;
 
 	public Usuario() {
-		//JAXB
+		// JAXB
 	}
+
 	public Usuario(String email, String nombre, String apellidos, String clave, LocalDate fechaNacimiento,
 			String telefono) {
 		this.email = email;
@@ -35,7 +36,8 @@ public class Usuario implements Identificable{
 		this.fechaNacimiento = fechaNacimiento;
 		this.telefono = telefono;
 		this.id = UUID.randomUUID().toString();
-		this.admin = false; // por defecto será un usuario normal, en serviciousuarios he puesto un método para otorgar admin
+		this.admin = false; // por defecto será un usuario normal, en serviciousuarios he puesto un método
+							// para otorgar admin
 	}
 
 	// --> GETTERS
@@ -99,9 +101,17 @@ public class Usuario implements Identificable{
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
 	}
+
 	@Override
 	public void setId(String id) {
-		this.id=id;
-		
-	}	
+		this.id = id;
+
+	}
+
+	@Override
+	public String toString() {
+		return "Usuario [id=" + id + ", email=" + email + ", nombre=" + nombre + ", apellidos=" + apellidos + ", clave="
+				+ clave + ", fechaNacimiento=" + fechaNacimiento + ", telefono=" + telefono + ", admin=" + admin + "]";
+	}
+
 }

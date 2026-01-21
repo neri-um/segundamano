@@ -8,23 +8,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.Table; 
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "lugares_recogida")
-public class LugarRecogida implements Serializable { 
+public class LugarRecogida implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@Lob
 	private String descripcion;
 	private double longitud;
 	private double latitud;
 
 	public LugarRecogida() {
-		//JAXB 
+		// JAXB
 	}
+
 	public LugarRecogida(String descripcion, double longitud, double latitud) {
 		this.descripcion = descripcion;
 		this.longitud = longitud;
@@ -57,5 +58,10 @@ public class LugarRecogida implements Serializable {
 		this.latitud = latitud;
 	}
 
+	@Override
+	public String toString() {
+		return "LugarRecogida [id=" + id + ", descripcion=" + descripcion + ", longitud=" + longitud + ", latitud="
+				+ latitud + "]";
+	}
 
 }

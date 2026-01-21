@@ -1,1 +1,12 @@
-/target/
+# Archivos de Eclipse
+.classpath
+.project
+.settings/
+
+# Archivos compilados (IMPORTANTE no subirlos)
+target/
+bin/
+
+# Archivos de sistema
+.DS_Store
+
