@@ -8,6 +8,14 @@ Plataforma de compraventa de productos de segunda mano. Proyecto desarrollado pa
 - **Categorías**: Organización jerárquica de productos.
 - **Búsqueda**: Filtrado por categoría, precio y estado.
 
+## Arquitectura y Diseño
+El proyecto sigue una arquitectura en capas basada en principios SOLID para garantizar escalabilidad y mantenibilidad:
+
+- **Patrón Repositorio y AdHoc**: Implementación de repositorios personalizados (AdHoc) para separar consultas complejas JPA de la interfaz estándar CRUD, desacoplando la persistencia del dominio.
+- **Separación de Responsabilidades**: Servicios dedicados (ServicioUsuarios, ServicioProductos) que encapsulan reglas de negocio, evitando God Classes.
+
+Ver documentación técnica detallada aquí
+
 ## Tecnologías
 - **Lenguaje**: Java 17
 - **Construcción**: Maven
