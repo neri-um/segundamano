@@ -14,7 +14,7 @@ El proyecto sigue una arquitectura en capas basada en principios SOLID para gara
 - **Patrón Repositorio y AdHoc**: Implementación de repositorios personalizados (AdHoc) para separar consultas complejas JPA de la interfaz estándar CRUD, desacoplando la persistencia del dominio.
 - **Separación de Responsabilidades**: Servicios dedicados (ServicioUsuarios, ServicioProductos) que encapsulan reglas de negocio, evitando God Classes.
 
-Ver documentación técnica detallada aquí
+Ver documentación técnica detallada aquí: [Especificaciones del proyecto](docs/MEMORIA.md)
 
 ## Tecnologías
 - **Lenguaje**: Java 17
