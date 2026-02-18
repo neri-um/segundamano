@@ -1,0 +1,14 @@
+package segundum.servicio;
+
+import java.io.IOException;
+
+import segundum.repositorio.RepositorioCategoriasAdHoc;
+import segundum.repositorio.RepositorioCategoriasAdHocJPA;
+
+public class ServicioCategorias {
+	private RepositorioCategoriasAdHoc repositorio;
+
+    public ServicioCategorias() throws IOException {
+        this.repositorio = new RepositorioCategoriasAdHocJPA();
+    }
+}

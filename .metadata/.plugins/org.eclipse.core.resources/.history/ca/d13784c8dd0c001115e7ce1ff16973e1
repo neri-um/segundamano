@@ -1,0 +1,5 @@
+package segundum.repositorio;
+
+public class RepositorioUsuariosAdHocJPA extends RepositorioUsuariosJPA implements RepositorioUsuariosAdHoc {
+
+}
