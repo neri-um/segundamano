@@ -1,5 +1,0 @@
-package segundum.servicio;
-
-public interface IServicioCategorias {
-
-}
