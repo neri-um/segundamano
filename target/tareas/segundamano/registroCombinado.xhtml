@@ -1,0 +1,175 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="title">Creación de obras y puntuarlas</ui:define>
+
+    <!-- Begin content define (was missing) -->
+    <ui:define name="content">
+
+        <section style="max-width: 600px; margin: 0 auto; background: #fafbfc; border-radius: 8px; box-shadow: 0 2px 8px #0001; padding: 2em 2em 1.5em 2em;">
+            <h2 style="text-align:center; color:#2c3e50; margin-bottom:1.5em;">
+                Creación de obras y puntuarlas
+            </h2>
+            <h:messages globalOnly="false"
+                        style="margin-bottom:1em; color:#155724; background:#d4edda; border:1px solid #c3e6cb; border-radius:4px; padding:0.5em;" />
+
+            <!-- Formulario 1: Alta de obra -->
+            <h:form rendered="#{registroObraWeb.obraRegistrado eq false}">
+                <h3 style="color:#2980b9; margin-bottom:1em;">Creación de una obra</h3>
+
+                <h:panelGrid columns="2" style="width:100%; margin-bottom:1em;" columnClasses="etiqueta, campo">
+					
+                    <h:outputLabel value="Titulo:" for="titulo" />
+                    <h:inputText id="titulo"
+                                 value="#{registroObraWeb.titulo}"
+                                 required="true"
+                                 style="width:95%" />
+								 
+								 
+					
+								 <h:outputLabel value="descripcion:" for="descripcion" />
+								<h:inputText id="descripcion"
+								 value="#{registroObraWeb.descripcion}"
+								 style="width:95%" />	
+								 
+								 
+								 <h:outputLabel value="tecnica:" for="tecnica" />
+								 <h:inputText id="tecnica"
+									 value="#{registroObraWeb.tecnica}"
+									required="true"
+								 	style="width:95%" />			 
+							
+															 	 
+							<h:outputLabel value="artista:" for="artista" />
+									 <h:inputText id="artista"
+									       value="#{registroObraWeb.artista}"
+									       required="true"
+									      style="width:95%" />				 
+							
+	
+                </h:panelGrid>
+
+                <div style="text-align:center;">
+                    <h:commandButton value="Crear"
+                                     action="#{registroObraWeb.registrarObra()}"
+                                     styleClass="button primary"
+                                     style="margin-top:0.5em;" />
+                </div>
+            </h:form>
+
+            <!-- Formulario 2: Registrar anuncio (solo si hay tablón creado) -->
+            <h:form rendered="#{registroObraWeb.obraRegistrado}">
+                <h3 style="color:#2980b9; margin-bottom:1em;">Registrar puntuacion</h3>
+
+                <h:panelGrid columns="2" style="width:100%; margin-bottom:1em;" columnClasses="etiqueta, campo">
+					
+                    <h:outputLabel value="Usuario:" for="usuario" />
+                    <h:inputText id="usuario"
+                                 value="#{registroObraWeb.usuario}"
+                                 required="true"
+                                 style="width:95%" />
+
+                    <h:outputLabel value="nota_tecnica:" for="nota_tecnica" />
+                    <h:inputText id="nota_tecnica"
+                                 value="#{registroObraWeb.nota_tecnica}"
+                                 required="true"
+                                 style="width:95%" />
+
+                    <h:outputLabel value="nota_artistica:" for="nota_artistica" />
+                    <h:inputText id="nota_artistica"
+                                     value="#{registroObraWeb.nota_artistica}"
+									 required="true"
+                                     style="width:95%" />
+                    <!-- Comentario corregido: campo opcional -->
+
+                    <h:outputLabel value="Comentario:" for="comentario" />
+                    <h:inputTextarea id="comentario"
+                                     value="#{registroObraWeb.comentario}"
+                                     style="width:95%" />
+                </h:panelGrid>
+
+                <div style="text-align:center;">
+                    <h:commandButton value="Registrar"
+                                     action="#{registroObraWeb.registrarPuntuacion()}"
+                                     styleClass="button primary"
+                                     style="margin-top:0.5em;" />
+                    <h:commandButton value="Omitir"
+                                     action="#{registroObraWeb.limpiarFormulario()}"
+                                     immediate="true"
+                                     style="margin-left:0.5em;" />
+                </div>
+            </h:form>
+        </section>
+
+        <!-- Formulario para registrar anuncio para tablón existente -->
+        <section style="max-width: 600px; margin: 2em auto 0 auto; background: #f8f9fa; border-radius: 8px; box-shadow: 0 2px 8px #0001; padding: 2em 2em 1.5em 2em;">
+            <h2 style="text-align:center; color:#2c3e50; margin-bottom:1.5em;">
+                Registrar Puntuacion para Obra existente
+            </h2>
+            <h:messages globalOnly="false"
+                        style="margin-bottom:1em; color:#155724; background:#d4edda; border:1px solid #c3e6cb; border-radius:4px; padding:0.5em;" />
+
+            <h:form id="formObraExistente">
+                <h:panelGrid columns="2" style="width:100%; margin-bottom:1em;" columnClasses="etiqueta, campo">
+                    <h:outputLabel value="Selecciona obra:" for="obraExistente" />
+
+                    <!-- Suponiendo que obra es List<obra> con id y nombre -->
+                    <h:selectOneMenu id="obraExistente"
+                                     value="#{registroObraWeb.idObra}"
+                                     required="true"
+                                     style="width:95%">
+                        <f:selectItem itemLabel="-- Selecciona --" itemValue="" />
+                        <f:selectItems value="#{registroObraWeb.cargarTodosLasObras()}"
+                                       var="t" itemLabel="#{t.titulo}" itemValue="#{t.codigo_inscripcion}" />
+                    </h:selectOneMenu>
+                    	<h:outputLabel value="Titulo:" for="titulo" />
+
+
+					<h:outputLabel value="Usuario:" for="usuario" />
+					                    <h:inputText id="usuario"
+					                                 value="#{registroObraWeb.usuario}"
+					                                 required="true"
+					                                 style="width:95%" />
+
+					                    <h:outputLabel value="nota_tecnica:" for="nota_tecnica" />
+					                    <h:inputText id="nota_tecnica"
+					                                 value="#{registroObraWeb.nota_tecnica}"
+					                                 required="true"
+					                                 style="width:95%" />
+
+					                    <h:outputLabel value="nota_artistica:" for="nota_artistica" />
+					                    <h:inputText id="nota_artistica"
+					                                     value="#{registroObraWeb.nota_artistica}"
+														 required="true"
+					                                     style="width:95%" />
+					                    
+
+					                    <h:outputLabel value="Comentario:" for="comentario" />
+					                    <h:inputTextarea id="comentario"
+					                                     value="#{registroObraWeb.comentario}"
+					                                     style="width:95%" />
+                </h:panelGrid>
+
+                <div style="text-align:center;">
+                    <h:commandButton value="Registrar Puntuacion"
+                                     action="#{registroObraWeb.registrarPuntuacionParaExistente()}"
+                                     styleClass="button primary"
+                                     style="margin-top:0.5em;" />
+                </div>
+            </h:form>
+			
+        </section>
+
+        <!-- Link al listado de obras -->
+        <div style="text-align:center; margin-top:1.5em;">
+            <!-- Usamos h:link para navegación JSF hacia /arte/listado.xhtml -->
+            <h:link value="Ver listado de obras" outcome="/arte/listado.xhtml" styleClass="button" />
+            <!-- Alternativa con redirect: <h:commandLink action="/arte/listado.xhtml?faces-redirect=true">Ver listado</h:commandLink> -->
+        </div>
+		
+		
+    </ui:define>
+</ui:composition>
