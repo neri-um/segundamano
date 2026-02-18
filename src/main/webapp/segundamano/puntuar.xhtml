@@ -1,0 +1,75 @@
+<ui:composition template="/WEB-INF/template/template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="title">
+        Puntuar Obra - Concurso de arte
+    </ui:define>
+    
+    <!-- Si tienes otro estilo para el menú activo, ponlo aquí -->
+    <ui:param name="estilo3" value="current" /> 
+
+    <ui:define name="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="content">
+
+                    <h:form id="formPuntuar">
+                        
+                        <div style="margin-bottom: 20px; border: 1px solid #ddd; padding: 15px;">
+                            <h3>Puntuar una Obra</h3>
+                            
+                            <!-- USAMOS UNA TABLA SIMPLE PARA ALINEAR EL FORMULARIO -->
+                            <h:panelGrid columns="2" cellpadding="10" style="width: 100%">
+                                
+                                <label>Selecciona la Obra:</label>
+                                <h:selectOneMenu value="#{arteWeb.idAnimal}" required="true" 
+                                                 style="padding: 5px; width: 100%;">
+                                    <f:selectItem itemLabel="-- Elige un animal --" itemValue="" />
+                                    <!-- Cargamos las obras del Bean -->
+                                    <f:selectItems value="#{arteWeb.animales}" var="obra"
+                                                   itemLabel="#{animal.nombre}" itemValue="#{animal.id}" />
+                                </h:selectOneMenu>
+
+                                <label>Usuario (Email):</label>
+                                <h:inputText value="#{arteWeb.nuevoUsuario}" required="true" 
+                                             style="padding: 5px; width: 100%;" />
+
+                                <label>Nota Técnica (0-10):</label>
+                                <h:inputText value="#{arteWeb.nuevaNotaTecnica}" required="true" 
+                                             converterMessage="Debe ser un número" style="padding: 5px; width: 100%;">
+                                    <f:validateDoubleRange minimum="0.0" maximum="10.0" />
+                                </h:inputText>
+
+                                <label>Nota Artística (0-10):</label>
+                                <h:inputText value="#{arteWeb.nuevaNotaArtistica}" required="true" 
+                                             converterMessage="Debe ser un número" style="padding: 5px; width: 100%;">
+                                    <f:validateDoubleRange minimum="0.0" maximum="10.0" />
+                                </h:inputText>
+
+                                <label>Comentario:</label>
+                                <h:inputTextarea value="#{arteWeb.nuevoComentario}" rows="4" 
+                                                 style="padding: 5px; width: 100%;" />
+                                                 
+                            </h:panelGrid>
+
+                            <!-- BOTONES -->
+                            <div style="margin-top: 20px; text-align: center;">
+                                <h:commandButton value="Guardar Puntuación" 
+                                                 action="#{arteWeb.guardarPuntuacion}"
+                                                 style="background-color: #28a745; color: white; border: none; padding: 10px 20px; cursor: pointer; margin-right: 10px;" />
+                                
+                                <h:button value="Cancelar" outcome="listado"
+                                          style="background-color: #6c757d; color: white; border: none; padding: 10px 20px; cursor: pointer;" />
+                            </div>
+                        </div>
+
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
