@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>MorenoCegarra-Irene</groupId>
-	<artifactId>tareas</artifactId>
+	<artifactId>segundamano</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
@@ -217,7 +217,7 @@
 
 	<build>
 		<finalName>
-			tareas
+			segundamano
 		</finalName>
 		<plugins>
 			<plugin>

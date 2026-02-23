@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import repositorio.EntidadNoEncontrada;
+import repositorio.FactoriaRepositorios;
 import repositorio.RepositorioException;
 import segundamano.modelo.Usuario;
 import segundamano.repositorio.RepositorioUsuariosAdHoc;
@@ -11,11 +12,8 @@ import segundamano.repositorio.RepositorioUsuariosAdHocJPA;
 
 public class ServicioUsuarios implements IServicioUsuarios{
 
-	private RepositorioUsuariosAdHoc repositorio;
-
-    public ServicioUsuarios() throws IOException {
-        this.repositorio = new RepositorioUsuariosAdHocJPA();
-    }
+    private RepositorioUsuariosAdHocJPA repositorio =
+            FactoriaRepositorios.getRepositorio(Usuario.class);
 
 	@Override
 	public String altaUsuario(String nombre, String apellidos, String email, String clave, LocalDate fechaNac,

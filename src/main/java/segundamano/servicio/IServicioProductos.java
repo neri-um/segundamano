@@ -39,7 +39,7 @@ son opcionales. El orden de los estados de mejor a peor es: nuevo > como nuevo >
 	void añadirVisualizaciones(String id) throws RepositorioException, EntidadNoEncontrada;
 
 	List<Producto> buscarProductos(String categoriaId, String descripcion, Estado estado, Double precioMax)
-			throws RepositorioException;
+			throws RepositorioException, EntidadNoEncontrada;
 
 	List<ProductoResumen> historialDelMes(int mes, int anio) throws RepositorioException;
 

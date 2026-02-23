@@ -1,5 +1,9 @@
 package segundamano.repositorio;
 
+import java.util.List;
+
+import repositorio.EntidadNoEncontrada;
+import repositorio.RepositorioException;
 import repositorio.RepositorioString;
 import segundamano.modelo.Categoria;
 
@@ -10,21 +14,14 @@ import segundamano.modelo.Categoria;
  */
 public interface RepositorioCategoriasAdHoc extends RepositorioString<Categoria> {
 
-	/*
-	 * Ejemplo de implementación por defecto (útil para un repositorio en memoria).
-	 
-	public default List<Encuesta> getByActivas() throws RepositorioException {
-		LocalDateTime ahora = LocalDateTime.now();
-		return getAll().stream().filter(encuesta -> encuesta.getApertura().isBefore(ahora) &&
-				encuesta.getCierre().isAfter(ahora)).collect(Collectors.toList());
-	}
-	
-	public List<Encuesta> getBySinVotos() throws RepositorioException, EntidadNoEncontrada ;
-	
-	public List<Encuesta> getByNumeroOpcionesMayorQue(int numero)  throws RepositorioException, EntidadNoEncontrada ;
-	
-	// ...
-	public List<Encuesta> getByVotante(String nombre);
-	public List<Object[]> getOpcionesPorVotos() throws RepositorioException;
-	*/
+    void actualizarDescripcion(String idCategoria, String descripcion)
+            throws RepositorioException, EntidadNoEncontrada;
+
+    List<Categoria> recuperarCategoriasRaiz() throws RepositorioException;
+
+    List<Categoria> recuperarDescendientes(String idCategoria)
+            throws RepositorioException, EntidadNoEncontrada;
+
+    List<String> getIdsCategoriaYDescendientes(String idCategoria)
+            throws RepositorioException, EntidadNoEncontrada;
 }
