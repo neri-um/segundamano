@@ -1,0 +1,12 @@
+# Eclipse
+.metadata/
+.settings/
+.classpath
+.project
+
+# Maven
+target/
+*.class
+
+# Logs
+*.log
