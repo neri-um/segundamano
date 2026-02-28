@@ -1,13 +1,11 @@
 package segundamano.servicio;
 
-import java.io.IOException;
 import java.time.LocalDate;
 
 import repositorio.EntidadNoEncontrada;
 import repositorio.FactoriaRepositorios;
 import repositorio.RepositorioException;
 import segundamano.modelo.Usuario;
-import segundamano.repositorio.RepositorioUsuariosAdHoc;
 import segundamano.repositorio.RepositorioUsuariosAdHocJPA;
 
 public class ServicioUsuarios implements IServicioUsuarios{
