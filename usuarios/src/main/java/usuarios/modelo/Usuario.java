@@ -1,7 +1,6 @@
 package usuarios.modelo;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -34,7 +33,6 @@ public class Usuario implements Identificable {
 		this.clave = clave;
 		this.fechaNacimiento = fechaNacimiento;
 		this.telefono = telefono;
-		this.id = UUID.randomUUID().toString();
 		this.admin = false;
 	}
 

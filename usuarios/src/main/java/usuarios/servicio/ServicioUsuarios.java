@@ -1,13 +1,12 @@
 package usuarios.servicio;
 
-import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 import repositorio.EntidadNoEncontrada;
 import repositorio.FactoriaRepositorios;
 import repositorio.RepositorioException;
 import usuarios.modelo.Usuario;
-import usuarios.repositorio.RepositorioUsuariosAdHoc;
 import usuarios.repositorio.RepositorioUsuariosAdHocJPA;
 
 public class ServicioUsuarios implements IServicioUsuarios{
@@ -75,6 +74,18 @@ public class ServicioUsuarios implements IServicioUsuarios{
 	        usuario.setTelefono(telefono);
 	    }
 	    repositorio.update(usuario);
+	}
+
+	@Override
+	public Usuario recuperarUsuario(String id) throws RepositorioException, EntidadNoEncontrada {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Usuario> listarUsuarios() throws RepositorioException {
+		// TODO tarea 2 juan
+		return null;
 	}
 
 }
