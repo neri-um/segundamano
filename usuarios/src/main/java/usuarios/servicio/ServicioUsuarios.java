@@ -78,14 +78,15 @@ public class ServicioUsuarios implements IServicioUsuarios{
 
 	@Override
 	public Usuario recuperarUsuario(String id) throws RepositorioException, EntidadNoEncontrada {
-		// TODO Auto-generated method stub
-		return null;
+		 if (id == null || id.trim().isEmpty())
+		        throw new IllegalArgumentException("ERROR: El ID de usuario es obligatorio");
+
+		    return repositorio.getById(id); 
 	}
 
 	@Override
 	public List<Usuario> listarUsuarios() throws RepositorioException {
-		// TODO tarea 2 juan
-		return null;
+		 return repositorio.getAll();
 	}
 
 }
