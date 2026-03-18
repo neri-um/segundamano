@@ -8,18 +8,10 @@ import java.util.List;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.PATCH;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 
+import io.jsonwebtoken.Claims;
 import servicio.FactoriaServicios;
 import usuarios.modelo.Usuario;
 import usuarios.rest.dto.ListadoUsuariosDTO;
@@ -40,7 +32,10 @@ public class UsuariosControladorRest {
     @Context private UriInfo uriInfo;
     @Context private HttpServletRequest servletRequest;
 
-    // POST /usuarios
+    // ← Añadido: para leer los claims del token en el PATCH
+    @Context private HttpServletRequest servletRequest;
+
+    // POST /usuarios — público, no requiere token
     @POST
     @PermitAll
     @Consumes(MediaType.APPLICATION_JSON)
@@ -57,7 +52,7 @@ public class UsuariosControladorRest {
                        .build();
     }
 
-    // GET /usuarios/{id}
+    // GET /usuarios/{id} — requiere autenticación
     @GET
     @Path("{id}")
     @RolesAllowed("USUARIO")
@@ -66,7 +61,7 @@ public class UsuariosControladorRest {
         return Response.ok(UsuarioDTO.fromEntity(usuario)).build();
     }
 
-    // PATCH /usuarios/{id}
+    // PATCH /usuarios/{id} — requiere autenticación + solo el propio usuario
     @PATCH
     @Path("{id}")
     @RolesAllowed("USUARIO")
@@ -75,6 +70,7 @@ public class UsuariosControladorRest {
             @PathParam("id") String id,
             NuevoUsuarioDTO datos) throws Exception {
 
+        // Comprobar que el usuario autenticado es el mismo que se modifica
         Claims claims = (Claims) servletRequest.getAttribute("claims");
         if (!claims.getSubject().equals(id)) {
             return Response.status(Response.Status.FORBIDDEN).build();
@@ -90,7 +86,7 @@ public class UsuariosControladorRest {
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
-    // GET /usuarios
+    // GET /usuarios — requiere autenticación
     @GET
     @RolesAllowed("USUARIO")
     public Response getListadoUsuarios() throws Exception {
@@ -98,10 +94,9 @@ public class UsuariosControladorRest {
         List<ListadoUsuariosDTO.ResumenConURL> resultado = new LinkedList<>();
         for (Usuario u : usuarios) {
             URI url = uriInfo.getAbsolutePathBuilder().path(u.getId()).build();
-            resultado.add(new ListadoUsuariosDTO.ResumenConURL(
-                url.toString(),
-                UsuarioResumenDTO.fromEntity(u)   
-            ));
+            UsuarioResumenDTO resumen = new UsuarioResumenDTO(
+                u.getId(), u.getNombre(), u.getEmail());
+            resultado.add(new ListadoUsuariosDTO.ResumenConURL(url.toString(), resumen));
         }
         return Response.ok(new ListadoUsuariosDTO(resultado)).build();
     }

@@ -19,6 +19,7 @@
 
 
 	<dependencies>
+
 		<!-- JSON Schema-->
 		<dependency>
 			<groupId>com.networknt</groupId>

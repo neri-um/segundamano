@@ -27,6 +27,7 @@ public class Usuario implements Identificable {
 
 	public Usuario(String email, String nombre, String apellidos, String clave, LocalDate fechaNacimiento,
 			String telefono) {
+		this.id = java.util.UUID.randomUUID().toString();
 		this.email = email;
 		this.nombre = nombre;
 		this.apellidos = apellidos;

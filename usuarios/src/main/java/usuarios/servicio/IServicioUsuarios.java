@@ -18,5 +18,8 @@ public interface IServicioUsuarios {
 	Usuario recuperarUsuario(String id) throws RepositorioException, EntidadNoEncontrada;
 
 	List<Usuario> listarUsuarios() throws RepositorioException;
+	
+	Usuario login(String email, String clave) throws RepositorioException, EntidadNoEncontrada;
+
 
 }
