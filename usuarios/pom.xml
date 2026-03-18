@@ -86,6 +86,22 @@
 
 		
 
+		<!-- Servlet API 3.1 (compatible con Jersey 2.x) -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Jackson para serializar objetos a JSON -->
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>2.41</version>
+		</dependency>
+
+
 	</dependencies>
 	<build>
 		<finalName>usuarios</finalName>

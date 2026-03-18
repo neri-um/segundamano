@@ -16,9 +16,12 @@ import servicio.FactoriaServicios;
 import usuarios.modelo.Usuario;
 import usuarios.rest.dto.ListadoUsuariosDTO;
 import usuarios.rest.dto.NuevoUsuarioDTO;
+import usuarios.rest.dto.UsuarioCreadoDTO;
 import usuarios.rest.dto.UsuarioDTO;
 import usuarios.rest.dto.UsuarioResumenDTO;
 import usuarios.servicio.IServicioUsuarios;
+import io.jsonwebtoken.Claims;
+
 
 @Path("usuarios")
 @Produces(MediaType.APPLICATION_JSON)
@@ -27,6 +30,7 @@ public class UsuariosControladorRest {
     private IServicioUsuarios servicio = FactoriaServicios.getServicio(IServicioUsuarios.class);
 
     @Context private UriInfo uriInfo;
+    @Context private HttpServletRequest servletRequest;
 
     // ← Añadido: para leer los claims del token en el PATCH
     @Context private HttpServletRequest servletRequest;
@@ -44,7 +48,7 @@ public class UsuariosControladorRest {
         );
         URI nuevaURL = uriInfo.getAbsolutePathBuilder().path(id).build();
         return Response.created(nuevaURL)
-                       .entity("{\"id\": \"" + id + "\"}")
+                       .entity(new UsuarioCreadoDTO(id))  
                        .build();
     }
 

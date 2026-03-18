@@ -4,16 +4,16 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import repositorio.RepositorioException;
+import repositorio.EntidadNoEncontrada;
 import usuarios.rest.dto.ErrorDTO;
 
 @Provider
-public class TratamientoRepositorioException
-        implements ExceptionMapper<RepositorioException> {
+public class TratamientoEntidadNoEncontradaException
+        implements ExceptionMapper<EntidadNoEncontrada> {
     @Override
-    public Response toResponse(RepositorioException e) {
+    public Response toResponse(EntidadNoEncontrada e) {
         return Response
-            .status(Response.Status.INTERNAL_SERVER_ERROR)
+            .status(Response.Status.NOT_FOUND)
             .entity(new ErrorDTO(e.getMessage()))
             .type(MediaType.APPLICATION_JSON)
             .build();
