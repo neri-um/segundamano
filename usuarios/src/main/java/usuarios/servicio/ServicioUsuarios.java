@@ -92,11 +92,13 @@ public class ServicioUsuarios implements IServicioUsuarios{
 	
 	@Override
 	public Usuario login(String email, String clave) throws RepositorioException, EntidadNoEncontrada {
-	    Usuario usuario = repositorio.getByEmail(email);
-	    if (!usuario.getClave().equals(clave)) {
-	        return null; // credenciales inválidas
-	    }
-	    return usuario;
+		try {
+		    Usuario usuario = repositorio.getByEmail(email);
+		    if (!usuario.getClave().equals(clave)) return null;
+		    return usuario;
+		} catch (EntidadNoEncontrada e) {
+		    return null;
+		}
 	}
 
 	
