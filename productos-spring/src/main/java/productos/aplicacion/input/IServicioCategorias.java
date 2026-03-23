@@ -1,10 +1,10 @@
-package productos.servicio;
+package productos.aplicacion.input;
 
 import java.util.List;
 
-import productos.modelo.Categoria;
-import repositorio.EntidadNoEncontrada;
-import repositorio.RepositorioException;
+import productos.dominio.modelo.Categoria;
+import productos.infraestructura.persistencia.base.EntidadNoEncontrada;
+import productos.infraestructura.persistencia.base.RepositorioException;
 
 public interface IServicioCategorias {
 

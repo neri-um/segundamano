@@ -1,4 +1,4 @@
-package repositorio;
+package productos.infraestructura.persistencia.base;
 
 /*
  * Excepción que representa un fallo en el sistema de persistencia.

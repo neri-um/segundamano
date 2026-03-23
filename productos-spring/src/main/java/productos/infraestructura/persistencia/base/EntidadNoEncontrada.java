@@ -1,4 +1,4 @@
-package repositorio;
+package productos.infraestructura.persistencia.base;
 
 /*
  * Excepción notificada si no existe una entidad con el identificador

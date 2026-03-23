@@ -1,4 +1,4 @@
-package productos.modelo;
+package productos.dominio.modelo;
 
 import java.io.Serializable;
 

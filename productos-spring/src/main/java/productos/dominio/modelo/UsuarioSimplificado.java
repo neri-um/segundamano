@@ -1,4 +1,4 @@
-package productos.modelo;
+package productos.dominio.modelo;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

@@ -1,4 +1,4 @@
-package productos.servicio;
+package productos.aplicacion.servicio;
 
 import java.io.File;
 import java.util.List;
@@ -8,17 +8,18 @@ import javax.xml.bind.Unmarshaller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import productos.modelo.Categoria;
-import productos.repositorio.RepositorioCategorias;
-import repositorio.EntidadNoEncontrada;
-import repositorio.RepositorioException;
+import productos.aplicacion.input.IServicioCategorias;
+import productos.aplicacion.output.IRepositorioCategorias;
+import productos.dominio.modelo.Categoria;
+import productos.infraestructura.persistencia.base.EntidadNoEncontrada;
+import productos.infraestructura.persistencia.base.RepositorioException;
 
 public class ServicioCategorias implements IServicioCategorias {
 
-	private RepositorioCategorias repositorio;
+	private IRepositorioCategorias repositorio;
 
 	@Autowired
-	public ServicioCategorias(RepositorioCategorias repositorio) {
+	public ServicioCategorias(IRepositorioCategorias repositorio) {
 		this.repositorio = repositorio;
 	}
 

@@ -1,4 +1,4 @@
-package productos.servicio;
+package productos.aplicacion.servicio;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,25 +11,31 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import productos.modelo.Categoria;
-import productos.modelo.Estado;
-import productos.modelo.LugarRecogida;
-import productos.modelo.Producto;
-import productos.modelo.UsuarioSimplificado;
-import productos.repositorio.RepositorioProductos;
-import repositorio.EntidadNoEncontrada;
-import repositorio.RepositorioException;
+import productos.aplicacion.input.IServicioProductos;
+import productos.aplicacion.output.IRepositorioCategorias;
+import productos.aplicacion.output.IRepositorioProductos;
+import productos.dominio.modelo.Categoria;
+import productos.dominio.modelo.Estado;
+import productos.dominio.modelo.LugarRecogida;
+import productos.dominio.modelo.Producto;
+import productos.dominio.modelo.UsuarioSimplificado;
+import productos.infraestructura.persistencia.base.EntidadNoEncontrada;
+import productos.infraestructura.persistencia.base.RepositorioException;
 
 @Service
 @Transactional
 public class ServicioProductos implements IServicioProductos {
 
-	private RepositorioProductos repositorio;
+	private IRepositorioProductos repositorio;
+	private IRepositorioCategorias repositorioCategorias; 
 
 	@Autowired
-	public ServicioProductos(RepositorioProductos repositorio) {
-		this.repositorio = repositorio;
+	public ServicioProductos(IRepositorioProductos repositorio,
+	                          IRepositorioCategorias repositorioCategorias) { 
+	    this.repositorio = repositorio;
+	    this.repositorioCategorias = repositorioCategorias; 
 	}
+
 
 	public Producto getProducto(String id) throws RepositorioException, EntidadNoEncontrada {
 		if (id == null || id.isEmpty())

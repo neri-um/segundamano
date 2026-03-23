@@ -1,14 +1,14 @@
-package productos.servicio;
+package productos.aplicacion.input;
 
-import java.time.LocalDate;
 import java.util.List;
 
-import productos.modelo.Categoria;
-import productos.modelo.Estado;
-import productos.modelo.Producto;
-import productos.modelo.UsuarioSimplificado;
-import repositorio.EntidadNoEncontrada;
-import repositorio.RepositorioException;
+import productos.aplicacion.servicio.ProductoResumen;
+import productos.dominio.modelo.Categoria;
+import productos.dominio.modelo.Estado;
+import productos.dominio.modelo.Producto;
+import productos.dominio.modelo.UsuarioSimplificado;
+import productos.infraestructura.persistencia.base.EntidadNoEncontrada;
+import productos.infraestructura.persistencia.base.RepositorioException;
 
 public interface IServicioProductos {
 /**

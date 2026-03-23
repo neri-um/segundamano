@@ -1,4 +1,4 @@
-package productos.modelo;
+package productos.dominio.modelo;
 
 import java.util.ArrayList;
 import java.util.Collection;
