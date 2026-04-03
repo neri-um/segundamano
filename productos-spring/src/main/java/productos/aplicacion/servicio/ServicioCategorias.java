@@ -14,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import productos.aplicacion.puertos.entrada.IServicioCategorias;
 import productos.aplicacion.puertos.salida.IRepositorioCategorias;
 import productos.dominio.modelo.Categoria;
-<<<<<<< HEAD
-import productos.dominio.modelo.Producto;
-=======
->>>>>>> aff986665e43008b81af73c9ca6bd4ad369254a7
+
 import repositorio.EntidadNoEncontrada;
 import repositorio.RepositorioException;
 

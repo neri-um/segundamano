@@ -1,13 +1,16 @@
 package productos.dominio.modelo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public enum Estado {
-	NUEVO(5), COMO_NUEVO(4), BUEN_ESTADO(3), ACEPTABLE(2), PARA_PIEZAS(1);
+    NUEVO, COMO_NUEVO, BUEN_ESTADO, ACEPTABLE, PARA_PIEZAS;
 
-	private final int nivel;
-	Estado(int nivel) { this.nivel = nivel; }
-	public int getNivel() { return nivel; }
-	
+    public int getNivel() {
+        switch (this) {
+            case NUEVO:        return 5;
+            case COMO_NUEVO:   return 4;
+            case BUEN_ESTADO:  return 3;
+            case ACEPTABLE:    return 2;
+            case PARA_PIEZAS:  return 1;
+            default:           return 0;
+        }
+    }
 }

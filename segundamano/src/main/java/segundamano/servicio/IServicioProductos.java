@@ -1,6 +1,5 @@
 package segundamano.servicio;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import repositorio.EntidadNoEncontrada;

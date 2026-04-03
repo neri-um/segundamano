@@ -1,7 +1,6 @@
 package segundamano.modelo;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

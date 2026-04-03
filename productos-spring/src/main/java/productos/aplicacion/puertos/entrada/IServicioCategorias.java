@@ -19,4 +19,5 @@ public interface IServicioCategorias {
             throws RepositorioException, EntidadNoEncontrada;
 
 	Categoria getCategoria(String id) throws RepositorioException, EntidadNoEncontrada;
+
 }

@@ -2,17 +2,12 @@ package productos.aplicacion.puertos.salida;
 
 import java.util.List;
 
-<<<<<<< HEAD
 import org.springframework.data.jpa.repository.JpaRepository;
-=======
-import productos.dominio.modelo.Categoria;
-import repositorio.EntidadNoEncontrada;
-import repositorio.RepositorioException;
->>>>>>> aff986665e43008b81af73c9ca6bd4ad369254a7
 
 import productos.dominio.modelo.Categoria;
 import repositorio.EntidadNoEncontrada;
 import repositorio.RepositorioException;
+
 
 public interface IRepositorioCategorias extends JpaRepository<Categoria, String> {
 	List<Categoria> recuperarCategoriasRaiz() throws RepositorioException;
