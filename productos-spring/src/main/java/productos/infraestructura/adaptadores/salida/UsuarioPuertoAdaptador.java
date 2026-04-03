@@ -13,35 +13,24 @@ import io.jsonwebtoken.Jwts;
 @Component
 public class UsuarioPuertoAdaptador implements UsuarioPuerto {
 
-    private static final String SECRET_KEY = "claveSecretaSuperSegura123"; // misma que usuarios
     private final UsuariosRetrofit usuariosRetrofit;
 
     public UsuarioPuertoAdaptador() {
         Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://localhost:8080/usuarios/")   // WAR de usuarios en Jetty
+            .baseUrl("http://localhost:8080/")   
             .addConverterFactory(GsonConverterFactory.create())
             .build();
         this.usuariosRetrofit = retrofit.create(UsuariosRetrofit.class);
     }
 
     @Override
-    public UsuarioSimplificado obtenerUsuario(String token) throws Exception {
-        // Extraer el id del subject del JWT
-        String tokenSinBearer = token.replace("Bearer ", "").trim();
-        Claims claims = Jwts.parser()
-            .setSigningKey(SECRET_KEY)
-            .parseClaimsJws(tokenSinBearer)
-            .getBody();
-        String userId = claims.getSubject();
-
-        // Llamar al microservicio usuarios
+    public UsuarioSimplificado obtenerUsuario(String usuarioId) throws Exception {
         UsuarioRemotoDTO dto = usuariosRetrofit
-            .getUsuario(userId, token)
+            .getUsuarioPublico(usuarioId)
             .execute()
             .body();
 
-        if (dto == null) throw new Exception("Usuario no encontrado: " + userId);
-
+        if (dto == null) throw new Exception("Usuario no encontrado: " + usuarioId);
         return new UsuarioSimplificado(dto.getId(), dto.getEmail(), dto.getNombre(), dto.getApellidos());
     }
 }

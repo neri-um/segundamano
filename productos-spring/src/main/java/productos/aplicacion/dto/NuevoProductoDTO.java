@@ -37,6 +37,7 @@ public class NuevoProductoDTO {
 	@NotBlank
 	private String idVendedor;
 	
+	private String vendedorId;
 	
 	public NuevoProductoDTO() {
 		//para leer el json
@@ -128,6 +129,14 @@ public class NuevoProductoDTO {
 
 	public void setIdVendedor(String idVendedor) {
 		this.idVendedor = idVendedor;
+	}
+
+	public String getVendedorId() {
+		return vendedorId;
+	}
+
+	public void setVendedorId(String vendedorId) {
+		this.vendedorId = vendedorId;
 	}  
     
 	

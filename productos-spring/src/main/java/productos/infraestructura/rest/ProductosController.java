@@ -60,12 +60,11 @@ public class ProductosController implements ProductosAPI{
 
     @PostMapping
     public ResponseEntity<NuevoProductoDTO> crearProducto(
-            @Valid @RequestBody NuevoProductoDTO dto,
-            @RequestHeader("Authorization") String token) throws Exception {
+            @Valid @RequestBody NuevoProductoDTO dto) throws Exception {
 
         Estado estado = Estado.valueOf(dto.getEstado());
         Categoria categoria = servicioC.getCategoria(dto.getCategoria());
-        UsuarioSimplificado vendedor = usuarioPuerto.obtenerUsuario(token); // ← aquí
+        UsuarioSimplificado vendedor = usuarioPuerto.obtenerUsuario(dto.getVendedorId());
         String id = servicio.altaProducto(dto.getTitulo(), dto.getDescripcion(),
                         dto.getPrecio(), estado, categoria, dto.isEnvio(), vendedor);
         URI url = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -129,13 +128,6 @@ public class ProductosController implements ProductosAPI{
         Page<ProductoDTO> dtos = resultado.map(ProductoDTO::fromEntity);
         return pagedResourcesAssembler.toModel(dtos);
     }
-
-	@Override
-	public ResponseEntity<NuevoProductoDTO> crearProducto(@Valid NuevoProductoDTO dto) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 
 
 }
