@@ -1,6 +1,7 @@
 package productos.infraestructura.rest;
 
 import java.net.URI;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -59,17 +60,18 @@ public class ProductosController implements ProductosAPI{
     private UsuarioPuerto usuarioPuerto;
 
     @PostMapping
-    public ResponseEntity<NuevoProductoDTO> crearProducto(
+    public ResponseEntity<Map<String, String>> crearProducto(
             @Valid @RequestBody NuevoProductoDTO dto) throws Exception {
 
         Estado estado = Estado.valueOf(dto.getEstado());
         Categoria categoria = servicioC.getCategoria(dto.getCategoria());
-        UsuarioSimplificado vendedor = usuarioPuerto.obtenerUsuario(dto.getVendedorId());
+        UsuarioSimplificado vendedor = usuarioPuerto.obtenerUsuario(dto.getIdVendedor());
         String id = servicio.altaProducto(dto.getTitulo(), dto.getDescripcion(),
                         dto.getPrecio(), estado, categoria, dto.isEnvio(), vendedor);
         URI url = ServletUriComponentsBuilder.fromCurrentRequest()
                         .path("/{id}").buildAndExpand(id).toUri();
-        return ResponseEntity.created(url).build();
+
+        return ResponseEntity.created(url).body(Map.of("id", id));
     }
 
     // GET /productos/{id}

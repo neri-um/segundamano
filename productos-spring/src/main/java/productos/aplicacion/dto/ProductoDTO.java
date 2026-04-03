@@ -6,12 +6,14 @@ import java.time.LocalDateTime;
 import productos.dominio.modelo.Producto;
 
 public class ProductoDTO {
+	private String id;
     private String titulo;
     private String descripcion;
     private double precio;
     private String estado;
     private LocalDateTime fechaPublicacion;
-    private String categoria;  
+    private String categoria;
+    private int visualizaciones;
     private boolean envio;
     private String lugarRecogida;
     private double longitud;
@@ -23,21 +25,36 @@ public class ProductoDTO {
 	}
     
 	public static ProductoDTO fromEntity(Producto p) {
-		ProductoDTO dto = new ProductoDTO();
-		dto.titulo = p.getTitulo();
-		dto.descripcion = p.getDescripcion();
-		dto.precio = p.getPrecio();
-		dto.estado = p.getEstado().toString();
-		dto.fechaPublicacion = p.getFechaPublicacion();
-		dto.categoria = p.getCategoria().toString();
-		dto.envio = p.isEnvio();
-		dto.lugarRecogida = p.getLugar().getDescripcion();
-		dto.longitud = p.getLugar().getLongitud();
-		dto.latitud = p.getLugar().getLatitud();
-		dto.usuarioVendedor = p.getVendedor().getNombre();
-		return dto;
+	    ProductoDTO dto = new ProductoDTO();
+	    dto.id = p.getId();
+	    dto.titulo = p.getTitulo();
+	    dto.descripcion = p.getDescripcion();
+	    dto.precio = p.getPrecio();
+	    dto.estado = p.getEstado().toString();
+	    dto.fechaPublicacion = p.getFechaPublicacion();
+	    dto.categoria = p.getCategoria().getNombre(); //para que se vea bonito
+	    dto.visualizaciones = p.getVisualizaciones();
+	    dto.envio = p.isEnvio();
+
+	    if (p.getLugar() != null) {
+	        dto.lugarRecogida = p.getLugar().getDescripcion();
+	        dto.longitud = p.getLugar().getLongitud();
+	        dto.latitud = p.getLugar().getLatitud();
+	    }
+
+	    dto.usuarioVendedor = p.getVendedor() != null ? p.getVendedor().getNombre() : null;
+
+	    return dto;
 	}
 
+	public String getId() {
+	    return id;
+	}
+
+	public void setId(String id) {
+	    this.id = id;
+	}
+	
 	public String getTitulo() {
 		return titulo;
 	}
@@ -86,6 +103,14 @@ public class ProductoDTO {
 		this.categoria = categoria;
 	}
 
+	public int getVisualizaciones() { 
+		return visualizaciones; 
+	}
+	
+	public void setVisualizaciones(int v) { 
+		this.visualizaciones = v; 
+	}
+	
 	public boolean isEnvio() {
 		return envio;
 	}

@@ -1,5 +1,7 @@
 package productos.infraestructura.rest;
 
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
@@ -35,5 +37,5 @@ public interface ProductosAPI {
     @Operation(summary = "Crear producto")
     @ApiResponse(responseCode = "201", description = "Producto creado")
     @PostMapping
-    ResponseEntity<NuevoProductoDTO> crearProducto(@Valid @RequestBody NuevoProductoDTO dto) throws Exception;
+    ResponseEntity<Map<String, String>> crearProducto(@Valid @RequestBody NuevoProductoDTO dto) throws Exception;
 }

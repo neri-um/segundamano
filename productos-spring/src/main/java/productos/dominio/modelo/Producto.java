@@ -35,7 +35,7 @@ public class Producto {
 	@JoinColumn(name = "lugar_recogida_id")
 	private LugarRecogida lugar;
 
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "vendedor_id")
 	private UsuarioSimplificado vendedor;
 

@@ -26,8 +26,12 @@ public interface IRepositorioProductos extends JpaRepository<Producto, String> {
     	       "       WHEN 'NUEVO' THEN 5 WHEN 'COMO_NUEVO' THEN 4 " +
     	       "       WHEN 'BUEN_ESTADO' THEN 3 WHEN 'ACEPTABLE' THEN 2 " +
     	       "       WHEN 'PARA_PIEZAS' THEN 1 END >= :estadoNivel)")
-	Page<Producto> buscarProductosConFiltros(List<String> idsCategorias, String descripcion, Integer estadoNivel,
-			BigDecimal precio, Pageable pageable);
+    Page<Producto> buscarProductosConFiltros(
+    	    @Param("idsCategorias") List<String> idsCategorias,
+    	    @Param("descripcion") String descripcion,
+    	    @Param("estadoNivel") Integer estadoNivel,
+    	    @Param("precioMax") BigDecimal precioMax,
+    	    Pageable pageable);
 
     @Query("SELECT new productos.aplicacion.servicio.ProductoResumen(" +
     	       "p.id, p.titulo, p.precio, p.fechaPublicacion, p.categoria.nombre, p.visualizaciones) " +
