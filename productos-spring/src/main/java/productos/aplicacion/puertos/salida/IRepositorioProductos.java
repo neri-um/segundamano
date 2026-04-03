@@ -1,5 +1,6 @@
 package productos.aplicacion.puertos.salida;
 
+<<<<<<< HEAD
 import org.springdoc.core.converters.models.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -41,3 +42,23 @@ public interface IRepositorioProductos extends JpaRepository<Producto, String> {
 
 
 }
+=======
+import java.math.BigDecimal;
+import java.time.YearMonth;
+import java.util.List;
+import java.util.Optional;
+
+import productos.aplicacion.servicio.ProductoResumen;
+import productos.dominio.modelo.Estado;
+import productos.dominio.modelo.Producto;
+import repositorio.EntidadNoEncontrada;
+import repositorio.RepositorioException;
+
+public interface IRepositorioProductos {
+
+	List<ProductoResumen> obtenerResumenMensual(YearMonth mes) throws RepositorioException;
+
+	List<Producto> buscarProductosConFiltros(String descripcion, List<String> idsCategorias, Estado estado,
+			BigDecimal precioMax) throws RepositorioException;
+}
+>>>>>>> aff986665e43008b81af73c9ca6bd4ad369254a7
