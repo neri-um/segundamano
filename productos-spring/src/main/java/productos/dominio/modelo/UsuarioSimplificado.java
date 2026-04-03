@@ -38,8 +38,20 @@ public class UsuarioSimplificado{
     public void setApellidos(String apellidos) { this.apellidos = apellidos; }
 
     @Override
-    public String toString() {
-        return "UsuarioSimplificado [id=" + id + ", email=" + email 
-               + ", nombre=" + nombre + ", apellidos=" + apellidos + "]";
+    public UsuarioSimplificado obtenerUsuario(String token) throws Exception {
+        // Extraer userId del JWT (sin librería, solo Base64 estándar Java)
+        String payload = token.replace("Bearer ", "").trim().split("\\.")[1];
+        String json = new String(Base64.getUrlDecoder().decode(payload));
+        String userId = new ObjectMapper().readTree(json).get("sub").asText();
+
+        // Llamar al endpoint público de usuarios (sin token)
+        ResponseEntity<UsuarioRemotoDTO> resp = restTemplate.getForEntity(
+            "http://localhost:8080/usuarios/api/usuarios/" + userId + "/publico",
+            UsuarioRemotoDTO.class
+        );
+
+        UsuarioRemotoDTO dto = resp.getBody();
+        if (dto == null) throw new Exception("Usuario no encontrado: " + userId);
+        return new UsuarioSimplificado(dto.getId(), dto.getEmail(), dto.getNombre(), dto.getApellidos());
     }
 }

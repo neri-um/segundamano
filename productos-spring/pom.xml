@@ -62,6 +62,25 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+		
+		<!-- Retrofit + Gson (para llamar al microservicio usuarios) -->
+		<dependency>
+		    <groupId>com.squareup.retrofit2</groupId>
+		    <artifactId>retrofit</artifactId>
+		    <version>2.9.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.squareup.retrofit2</groupId>
+		    <artifactId>converter-gson</artifactId>
+		    <version>2.9.0</version>
+		</dependency>
+		
+		<!-- JWT (para leer el sub/id del token) -->
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt</artifactId>
+		    <version>0.9.1</version>
+		</dependency>
 
 		<!-- HATEOAS -->
 		<dependency>

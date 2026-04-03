@@ -31,7 +31,7 @@ public class UsuariosControladorRest {
     @Context private UriInfo uriInfo;
 
 
-    // ← Añadido: para leer los claims del token en el PATCH
+
     @Context private HttpServletRequest servletRequest;
 
     // POST /usuarios — público, no requiere token
@@ -94,9 +94,20 @@ public class UsuariosControladorRest {
         for (Usuario u : usuarios) {
             URI url = uriInfo.getAbsolutePathBuilder().path(u.getId()).build();
             UsuarioResumenDTO resumen = new UsuarioResumenDTO(
-                u.getId(), u.getNombre(), u.getEmail());
+                u.getId(), u.getNombre(), u.getApellidos(), u.getEmail());
             resultado.add(new ListadoUsuariosDTO.ResumenConURL(url.toString(), resumen));
         }
         return Response.ok(new ListadoUsuariosDTO(resultado)).build();
     }
+    
+    
+ // GET /usuarios/{id}/publico — SIN autenticación, para uso interno entre microservicios
+    @GET
+    @Path("{id}/publico")
+    @PermitAll
+    public Response getUsuarioPublico(@PathParam("id") String id) throws Exception {
+        Usuario usuario = servicio.recuperarUsuario(id);
+        return Response.ok(UsuarioResumenDTO.fromEntity(usuario)).build();
+    }
+    
 }

@@ -1,6 +1,7 @@
 package productos.aplicacion.puertos.salida;
 
+import productos.dominio.modelo.UsuarioSimplificado;
+
 public interface UsuarioPuerto {
-	// operaciones q necesite usuarios
-	// ver que funciones hacen falta
+    UsuarioSimplificado obtenerUsuario(String token) throws Exception;
 }

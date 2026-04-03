@@ -22,16 +22,20 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+
 import productos.aplicacion.dto.LugarRecogidaDTO;
 import productos.aplicacion.dto.ModificarProductoDTO;
 import productos.aplicacion.dto.NuevoProductoDTO;
 import productos.aplicacion.dto.ProductoDTO;
 import productos.aplicacion.puertos.entrada.IServicioCategorias;
 import productos.aplicacion.puertos.entrada.IServicioProductos;
+import productos.aplicacion.puertos.salida.UsuarioPuerto;
 import productos.aplicacion.servicio.ProductoResumen;
 import productos.dominio.modelo.Categoria;
 import productos.dominio.modelo.Estado;
 import productos.dominio.modelo.Producto;
+import productos.dominio.modelo.UsuarioSimplificado;
 
 @RestController
 @RequestMapping("/productos")
@@ -50,15 +54,22 @@ public class ProductosController implements ProductosAPI{
 
     @Autowired
     private PagedResourcesAssembler<ProductoDTO> pagedResourcesAssembler;
+    
+    @Autowired
+    private UsuarioPuerto usuarioPuerto;
 
-    // POST /productos
     @PostMapping
-    public ResponseEntity<NuevoProductoDTO> crearProducto(@Valid @RequestBody NuevoProductoDTO dto) throws Exception {
+    public ResponseEntity<NuevoProductoDTO> crearProducto(
+            @Valid @RequestBody NuevoProductoDTO dto,
+            @RequestHeader("Authorization") String token) throws Exception {
+
         Estado estado = Estado.valueOf(dto.getEstado());
         Categoria categoria = servicioC.getCategoria(dto.getCategoria());
-        // TODO: usuario desde microservicio externos
-        String id = servicio.altaProducto(dto.getTitulo(), dto.getDescripcion(),dto.getPrecio(), estado, categoria, dto.isEnvio(), null);
-        URI url = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
+        UsuarioSimplificado vendedor = usuarioPuerto.obtenerUsuario(token); // ← aquí
+        String id = servicio.altaProducto(dto.getTitulo(), dto.getDescripcion(),
+                        dto.getPrecio(), estado, categoria, dto.isEnvio(), vendedor);
+        URI url = ServletUriComponentsBuilder.fromCurrentRequest()
+                        .path("/{id}").buildAndExpand(id).toUri();
         return ResponseEntity.created(url).build();
     }
 
@@ -118,6 +129,12 @@ public class ProductosController implements ProductosAPI{
         Page<ProductoDTO> dtos = resultado.map(ProductoDTO::fromEntity);
         return pagedResourcesAssembler.toModel(dtos);
     }
+
+	@Override
+	public ResponseEntity<NuevoProductoDTO> crearProducto(@Valid NuevoProductoDTO dto) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 
