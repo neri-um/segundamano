@@ -2,25 +2,25 @@ package productos.aplicacion.servicio;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
+import org.springdoc.core.converters.models.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import productos.aplicacion.input.IServicioProductos;
-import productos.aplicacion.output.IRepositorioCategorias;
-import productos.aplicacion.output.IRepositorioProductos;
+import productos.aplicacion.puertos.entrada.IServicioProductos;
+import productos.aplicacion.puertos.salida.IRepositorioCategorias;
+import productos.aplicacion.puertos.salida.IRepositorioProductos;
 import productos.dominio.modelo.Categoria;
 import productos.dominio.modelo.Estado;
 import productos.dominio.modelo.LugarRecogida;
 import productos.dominio.modelo.Producto;
 import productos.dominio.modelo.UsuarioSimplificado;
-import productos.infraestructura.persistencia.base.EntidadNoEncontrada;
-import productos.infraestructura.persistencia.base.RepositorioException;
+import repositorio.EntidadNoEncontrada;
+import repositorio.RepositorioException;
 
 @Service
 @Transactional
@@ -42,7 +42,7 @@ public class ServicioProductos implements IServicioProductos {
 			throw new IllegalArgumentException("id: no debe ser nulo ni vacio");
 		Optional<Producto> resultado = repositorio.findById(id);
 		if (resultado.isPresent() == false)
-			throw new EntidadNoEncontrada("No existe encuesta con id: " + id);
+			throw new EntidadNoEncontrada("No existe producto con id: " + id);
 		else
 			return resultado.get();
 	}
@@ -106,28 +106,32 @@ public class ServicioProductos implements IServicioProductos {
 		if (id == null || id.isEmpty())
 			throw new IllegalArgumentException("ERROR: ID no puede ser null o vacío");
 
-		repositorio.incrementarVisualizaciones(id);
+		Producto p = repositorio.findById(id).orElseThrow(() -> new EntidadNoEncontrada(id));
+		p.setVisualizaciones(p.getVisualizaciones() + 1);
+		repositorio.save(p);
+	}
+
+
+	@Override
+	@Transactional(readOnly = true)
+	public Page<ProductoResumen> historialDelMes(int mes, int anyo, Pageable pageable) throws RepositorioException {
+	    return repositorio.obtenerResumenMensual(anyo, mes, pageable);
 	}
 
 	@Override
-	public List<ProductoResumen> historialDelMes(int mes, int anio) throws RepositorioException {
-		YearMonth yearMonth = YearMonth.of(anio, mes);
-		return repositorio.obtenerResumenMensual(yearMonth);
+	@Transactional(readOnly = true)
+	public Page<Producto> buscarProductos(String categoria, String descripcion, 
+	        Estado estado, Double precioMax, Pageable pageable) throws RepositorioException, EntidadNoEncontrada {
+
+	    List<String> idsCategorias = null;
+	    if (categoria != null && !categoria.isEmpty()) {
+	        idsCategorias = repositorioCategorias.getIdsCategoriaYDescendientes(categoria);
+	    }
+
+	    Integer estadoNivel = (estado != null) ? estado.getNivel() : null;
+	    BigDecimal precio = (precioMax != null) ? BigDecimal.valueOf(precioMax) : null;
+
+	    return repositorio.buscarProductosConFiltros(idsCategorias, descripcion, estadoNivel, precio, pageable);
 	}
-
-	@Override
-	public List<Producto> buscarProductos(String categoriaId, String descripcion, Estado estado, Double precioMax)
-			throws RepositorioException, EntidadNoEncontrada {
-
-		List<String> idsCategorias = null;
-
-		// Si hay categoría, obtener ella + todos sus descendientes
-		if (categoriaId != null && !categoriaId.isEmpty()) {
-			idsCategorias = repositorioCategorias.getIdsCategoriaYDescendientes(categoriaId);
-		}
-
-		BigDecimal precio = (precioMax != null) ? BigDecimal.valueOf(precioMax) : null;
-
-		return repositorio.buscarProductosConFiltros(descripcion, idsCategorias, estado, precio);
-	}
+	
 }

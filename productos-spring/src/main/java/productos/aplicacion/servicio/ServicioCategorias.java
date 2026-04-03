@@ -2,18 +2,24 @@ package productos.aplicacion.servicio;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import productos.aplicacion.input.IServicioCategorias;
-import productos.aplicacion.output.IRepositorioCategorias;
+import productos.aplicacion.puertos.entrada.IServicioCategorias;
+import productos.aplicacion.puertos.salida.IRepositorioCategorias;
 import productos.dominio.modelo.Categoria;
-import productos.infraestructura.persistencia.base.EntidadNoEncontrada;
-import productos.infraestructura.persistencia.base.RepositorioException;
+import productos.dominio.modelo.Producto;
+import repositorio.EntidadNoEncontrada;
+import repositorio.RepositorioException;
 
+@Service
+@Transactional
 public class ServicioCategorias implements IServicioCategorias {
 
 	private IRepositorioCategorias repositorio;
@@ -23,6 +29,16 @@ public class ServicioCategorias implements IServicioCategorias {
 		this.repositorio = repositorio;
 	}
 
+	public Categoria getCategoria(String id) throws RepositorioException, EntidadNoEncontrada {
+		if (id == null || id.isEmpty())
+			throw new IllegalArgumentException("id: no debe ser nulo ni vacio");
+		Optional<Categoria> resultado = repositorio.findById(id);
+		if (resultado.isPresent() == false)
+			throw new EntidadNoEncontrada("No existe categoria con id: " + id);
+		else
+			return resultado.get();
+	}
+	
     @Override
     public void cargarJerarquia(String rutaFichero) throws RepositorioException {
         try {
