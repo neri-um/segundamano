@@ -63,10 +63,8 @@ public class ServicioCategorias implements IServicioCategorias {
             }
 
             // 3. Guardar la jerarquía completa (CascadeType.ALL persiste subcategorías)
-            repositorio.add(raiz);
+            repositorio.save(raiz);
 
-        } catch (RepositorioException e) {
-            throw e;
         } catch (Exception e) {
             throw new RepositorioException("Error al cargar jerarquía desde " + rutaFichero, e);
         }

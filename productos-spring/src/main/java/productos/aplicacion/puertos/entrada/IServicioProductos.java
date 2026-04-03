@@ -1,6 +1,6 @@
 package productos.aplicacion.puertos.entrada;
 
-import org.springdoc.core.converters.models.Pageable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 
 import productos.aplicacion.servicio.ProductoResumen;

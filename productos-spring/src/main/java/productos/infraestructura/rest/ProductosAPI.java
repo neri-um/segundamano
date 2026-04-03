@@ -2,7 +2,7 @@ package productos.infraestructura.rest;
 
 import javax.validation.Valid;
 
-import org.springdoc.core.converters.models.Pageable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;

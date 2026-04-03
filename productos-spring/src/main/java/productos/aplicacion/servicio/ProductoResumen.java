@@ -9,22 +9,25 @@ public class ProductoResumen {
 	private String titulo;
 	private double precio;
 	private LocalDateTime fechaPublicacion;
-	private Categoria categoria;
+	private String nombreCategoria;
 	private int visualizaciones = 0;
 
 	public ProductoResumen() {
 		// JAXB
 	}
 
-	public ProductoResumen(String id, String titulo, double precio, LocalDateTime fechaPublicacion, Categoria categoria,
-			int visualizaciones) {
-		super();
+	public ProductoResumen(String id, String titulo, double precio, LocalDateTime fechaPublicacion,
+			String nombreCategoria, int visualizaciones) {
 		this.id = id;
 		this.titulo = titulo;
 		this.precio = precio;
 		this.fechaPublicacion = fechaPublicacion;
-		this.categoria = categoria;
+		this.nombreCategoria = nombreCategoria;
 		this.visualizaciones = visualizaciones;
+	}
+
+	public String getNombreCategoria() {
+		return nombreCategoria;
 	}
 
 	public String getId() {
@@ -59,13 +62,6 @@ public class ProductoResumen {
 		this.fechaPublicacion = fechaPublicacion;
 	}
 
-	public Categoria getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
 
 	public int getVisualizaciones() {
 		return visualizaciones;

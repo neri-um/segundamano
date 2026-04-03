@@ -1,7 +1,7 @@
 package productos.aplicacion.puertos.salida;
 
-import org.springdoc.core.converters.models.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -36,9 +36,9 @@ public interface IRepositorioProductos extends JpaRepository<Producto, String> {
     	       "ORDER BY p.visualizaciones DESC")
     	Page<ProductoResumen> obtenerResumenMensual(
     	    @Param("year") int year,
-    	    @Param("month") int month, Pageable pageable
+    	    @Param("month") int month,
+    	    Pageable pageable
     	);
-
 
 }
 

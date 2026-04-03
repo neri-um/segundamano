@@ -4,7 +4,7 @@ import java.net.URI;
 
 import javax.validation.Valid;
 
-import org.springdoc.core.converters.models.Pageable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import productos.aplicacion.dto.LugarRecogidaDTO;
 import productos.aplicacion.dto.ModificarProductoDTO;
 import productos.aplicacion.dto.NuevoProductoDTO;
@@ -118,5 +118,7 @@ public class ProductosController implements ProductosAPI{
         Page<ProductoDTO> dtos = resultado.map(ProductoDTO::fromEntity);
         return pagedResourcesAssembler.toModel(dtos);
     }
+
+
 
 }
