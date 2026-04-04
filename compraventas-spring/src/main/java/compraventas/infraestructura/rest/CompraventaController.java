@@ -4,11 +4,11 @@ import compraventas.aplicacion.puertos.entrada.IServicioCompraventas;
 import compraventas.dominio.modelo.Compraventa;
 import compraventas.infraestructura.rest.dto.CompraventaRequestDTO;
 import compraventas.infraestructura.rest.dto.CompraventaResponseDTO;
+import repositorio.EntidadNoEncontrada;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -49,24 +50,20 @@ public class CompraventaController {
     @GetMapping("/comprador/{idComprador}")
     public PagedModel<EntityModel<CompraventaResponseDTO>> getComprasDeUsuario(
             @PathVariable String idComprador,
-            @RequestParam int page,
-            @RequestParam int size) {
+            Pageable pageable) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("fecha").descending());
         Page<CompraventaResponseDTO> resultado = servicio
                 .obtenerComprasDeUsuario(idComprador, pageable)
                 .map(this::toDTO);
 
         return pagedResourcesAssembler.toModel(resultado);
     }
-
+    
     @GetMapping("/vendedor/{idVendedor}")
     public PagedModel<EntityModel<CompraventaResponseDTO>> getVentasDeUsuario(
             @PathVariable String idVendedor,
-            @RequestParam int page,
-            @RequestParam int size) {
+            Pageable pageable) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("fecha").descending());
         Page<CompraventaResponseDTO> resultado = servicio
                 .obtenerVentasDeUsuario(idVendedor, pageable)
                 .map(this::toDTO);
@@ -78,15 +75,23 @@ public class CompraventaController {
     public PagedModel<EntityModel<CompraventaResponseDTO>> getCompraventasEntreUsuarios(
             @PathVariable String idComprador,
             @PathVariable String idVendedor,
-            @RequestParam int page,
-            @RequestParam int size) {
+            Pageable pageable) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by("fecha").descending());
         Page<CompraventaResponseDTO> resultado = servicio
                 .obtenerCompraventasEntreUsuarios(idComprador, idVendedor, pageable)
                 .map(this::toDTO);
 
         return pagedResourcesAssembler.toModel(resultado);
+    }
+    
+    
+    @GetMapping("/{id}")
+    public EntityModel<CompraventaResponseDTO> getCompraventa(@PathVariable String id) throws EntidadNoEncontrada {
+        EntityModel<CompraventaResponseDTO> model = EntityModel.of(toDTO(servicio.obtenerCompraventa(id)));
+        model.add(WebMvcLinkBuilder
+                .linkTo(WebMvcLinkBuilder.methodOn(CompraventaController.class).getCompraventa(id))
+                .withSelfRel());
+        return model;
     }
 
     private CompraventaResponseDTO toDTO(Compraventa c) {

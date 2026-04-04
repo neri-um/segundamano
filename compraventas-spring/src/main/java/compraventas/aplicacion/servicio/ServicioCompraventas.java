@@ -5,6 +5,7 @@ import compraventas.aplicacion.puertos.salida.IRepositorioCompraventas;
 import compraventas.aplicacion.puertos.salida.IPuertoProductos;
 import compraventas.aplicacion.puertos.salida.IPuertoUsuarios;
 import compraventas.dominio.modelo.Compraventa;
+import repositorio.EntidadNoEncontrada;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -62,4 +63,10 @@ public class ServicioCompraventas implements IServicioCompraventas {
     public Page<Compraventa> obtenerCompraventasEntreUsuarios(String idComprador, String idVendedor, Pageable pageable) {
         return repositorio.buscarPorCompradorYVendedor(idComprador, idVendedor, pageable);
     }
+    
+    @Override
+    public Compraventa obtenerCompraventa(String id) throws EntidadNoEncontrada {
+        return repositorio.buscarPorId(id);
+    }
+    
 }

@@ -1,6 +1,8 @@
 package compraventas.aplicacion.puertos.entrada;
 
 import compraventas.dominio.modelo.Compraventa;
+import repositorio.EntidadNoEncontrada;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -13,4 +15,6 @@ public interface IServicioCompraventas {
     Page<Compraventa> obtenerVentasDeUsuario(String idVendedor, Pageable pageable);
 
     Page<Compraventa> obtenerCompraventasEntreUsuarios(String idComprador, String idVendedor, Pageable pageable);
+    
+    Compraventa obtenerCompraventa(String id) throws EntidadNoEncontrada;
 }

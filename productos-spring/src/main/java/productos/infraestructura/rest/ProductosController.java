@@ -88,14 +88,14 @@ public class ProductosController implements ProductosAPI{
 
     // PATCH /productos/{id}/recogida
     @PatchMapping("/{id}/recogida")
-    public ResponseEntity<Void> asignarRecogida(@PathVariable String id, @RequestBody LugarRecogidaDTO dto) throws Exception {
+    public ResponseEntity<Void> asignarRecogida(@PathVariable String id, @Valid  @RequestBody LugarRecogidaDTO dto) throws Exception {
         servicio.asignarRecogida(id, dto.getLatitud(), dto.getLongitud(), dto.getDescripcion());
         return ResponseEntity.noContent().build();
     }
 
     // PATCH /productos/{id}
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> modificarProducto(@PathVariable String id, @RequestBody ModificarProductoDTO dto) throws Exception {
+    public ResponseEntity<Void> modificarProducto(@PathVariable String id, @Valid  @RequestBody ModificarProductoDTO dto) throws Exception {
         servicio.modificarProducto(id, dto.getPrecio(), dto.getDescripcion());
         return ResponseEntity.noContent().build();
     }
