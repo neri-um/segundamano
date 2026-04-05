@@ -6,6 +6,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface ProductosRetrofitClient {
-    @GET("api/productos/{id}")
+	@GET("productos/{id}")
     Call<ProductoDTO> getProducto(@Path("id") String id);
 }

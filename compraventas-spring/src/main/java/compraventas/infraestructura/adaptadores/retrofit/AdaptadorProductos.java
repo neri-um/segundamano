@@ -35,8 +35,7 @@ public class AdaptadorProductos implements IPuertoProductos {
 
     @Override
     public String getIdVendedor(String idProducto) {
-        ProductoDTO p = fetchProducto(idProducto);
-        return p.getVendedor() != null ? p.getVendedor().getId() : null;
+        return fetchProducto(idProducto).getIdVendedor(); 
     }
 
     @Override
@@ -51,6 +50,6 @@ public class AdaptadorProductos implements IPuertoProductos {
 
     @Override
     public String getRecogida(String idProducto) {
-        return fetchProducto(idProducto).getRecogida();
+        return fetchProducto(idProducto).getLugarRecogida();
     }
 }

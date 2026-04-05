@@ -19,6 +19,8 @@ public class ProductoDTO {
     private double longitud;
     private double latitud;
     private String usuarioVendedor;
+    private String idVendedor;
+
     
 	public ProductoDTO() {
 		//para el fromEntity linea 1
@@ -43,7 +45,7 @@ public class ProductoDTO {
 	    }
 
 	    dto.usuarioVendedor = p.getVendedor() != null ? p.getVendedor().getNombre() : null;
-
+	    dto.idVendedor      = p.getVendedor() != null ? p.getVendedor().getId()     : null; 
 	    return dto;
 	}
 
@@ -151,5 +153,12 @@ public class ProductoDTO {
 		this.usuarioVendedor = usuarioVendedor;
 	}
 	
-    
+	public String getIdVendedor() { 
+		return idVendedor; 
+	}
+	
+	public void setIdVendedor(String idVendedor) { 
+		this.idVendedor = idVendedor; 
+	}
+	
 }
