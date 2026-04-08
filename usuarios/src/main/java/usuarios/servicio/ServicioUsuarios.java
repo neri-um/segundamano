@@ -100,6 +100,27 @@ public class ServicioUsuarios implements IServicioUsuarios{
 		    return null;
 		}
 	}
+	@Override
+	public void incrementarVentas(String idUsuario) throws RepositorioException {
+	    try {
+	        Usuario u = repositorio.getById(idUsuario);
+	        u.setContadorVentas(u.getContadorVentas() + 1);
+	        repositorio.update(u);
+	    } catch (EntidadNoEncontrada e) {
+	        System.err.println("Usuario no encontrado para incrementar ventas: " + idUsuario);
+	    }
+	}
+
+	@Override
+	public void incrementarCompras(String idUsuario) throws RepositorioException {
+	    try {
+	        Usuario u = repositorio.getById(idUsuario);
+	        u.setContadorCompras(u.getContadorCompras() + 1);
+	        repositorio.update(u);
+	    } catch (EntidadNoEncontrada e) {
+	        System.err.println("Usuario no encontrado para incrementar compras: " + idUsuario);
+	    }
+	}
 
 	
 }

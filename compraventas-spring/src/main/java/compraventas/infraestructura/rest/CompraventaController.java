@@ -19,6 +19,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 
 import javax.validation.Valid;
+
+import java.io.IOException;
 import java.net.URI;
 
 @RestController
@@ -36,7 +38,7 @@ public class CompraventaController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> realizarCompraventa(
-            @Valid @RequestBody CompraventaRequestDTO request) {
+            @Valid @RequestBody CompraventaRequestDTO request) throws IOException {
 
         Compraventa c = servicio.realizarCompraventa(
                 request.getIdProducto(), request.getIdComprador());

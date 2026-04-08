@@ -5,14 +5,15 @@ import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import javax.persistence.Id;
+import javax.persistence.EnumType;
 
 @Entity
 @Table(name = "productos")
@@ -38,6 +39,8 @@ public class Producto {
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "vendedor_id")
 	private UsuarioSimplificado vendedor;
+
+	private boolean vendido = false;
 
 	public Producto() {
 	}
@@ -143,6 +146,13 @@ public class Producto {
 	public void setVendedor(UsuarioSimplificado vendedor) {
 		this.vendedor = vendedor;
 	}
-	
-	
+
+	public boolean isVendido() {
+		return vendido;
+	}
+
+	public void setVendido(boolean vendido) {
+		this.vendido = vendido;
+	}
+
 }

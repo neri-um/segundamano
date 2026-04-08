@@ -7,9 +7,6 @@ import productos.aplicacion.dto.UsuarioRemotoDTO;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-
 @Component
 public class UsuarioPuertoAdaptador implements UsuarioPuerto {
 

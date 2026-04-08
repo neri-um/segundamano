@@ -20,6 +20,8 @@ public class Usuario implements Identificable {
 	private LocalDate fechaNacimiento;
 	private String telefono;
 	private boolean admin;
+	private int contadorVentas = 0;
+	private int contadorCompras = 0;
 
 	public Usuario() {
 		// JPA
@@ -102,6 +104,22 @@ public class Usuario implements Identificable {
 	@Override
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public int getContadorVentas() {
+		return contadorVentas;
+	}
+
+	public void setContadorVentas(int contadorVentas) {
+		this.contadorVentas = contadorVentas;
+	}
+
+	public int getContadorCompras() {
+		return contadorCompras;
+	}
+
+	public void setContadorCompras(int contadorCompras) {
+		this.contadorCompras = contadorCompras;
 	}
 
 	@Override

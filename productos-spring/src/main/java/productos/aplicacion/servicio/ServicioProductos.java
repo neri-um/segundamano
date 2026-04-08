@@ -134,4 +134,10 @@ public class ServicioProductos implements IServicioProductos {
 	    return repositorio.buscarProductosConFiltros(idsCategorias, descripcion, estadoNivel, precio, pageable);
 	}
 	
+	@Override
+	public void marcarComoVendido(String idProducto) throws RepositorioException, EntidadNoEncontrada {
+	    Producto p = getProducto(idProducto);
+	    p.setVendido(true);
+	    repositorio.save(p);
+	}
 }

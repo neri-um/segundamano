@@ -2,7 +2,6 @@ package productos.aplicacion.servicio;
 
 import java.time.LocalDateTime;
 
-import productos.dominio.modelo.Categoria;
 
 public class ProductoResumen {
 	private String id;
