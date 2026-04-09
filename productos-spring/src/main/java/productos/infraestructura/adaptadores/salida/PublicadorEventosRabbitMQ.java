@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import productos.aplicacion.puertos.salida.ProductosPuerto;
-import productos.eventos.Evento;
 import productos.eventos.config.RabbitMQConfig;
+import productos.eventos.Evento;
 
 @Component
 public class PublicadorEventosRabbitMQ implements ProductosPuerto {
