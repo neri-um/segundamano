@@ -14,11 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 import productos.aplicacion.puertos.entrada.IServicioProductos;
 import productos.aplicacion.puertos.salida.IRepositorioCategorias;
 import productos.aplicacion.puertos.salida.IRepositorioProductos;
+import productos.aplicacion.puertos.salida.ProductosPuerto;
 import productos.dominio.modelo.Categoria;
 import productos.dominio.modelo.Estado;
 import productos.dominio.modelo.LugarRecogida;
 import productos.dominio.modelo.Producto;
 import productos.dominio.modelo.UsuarioSimplificado;
+import productos.eventos.EventoProductoCreado;
+import productos.eventos.EventoProductoModificado;
 import repositorio.EntidadNoEncontrada;
 import repositorio.RepositorioException;
 
@@ -28,12 +31,16 @@ public class ServicioProductos implements IServicioProductos {
 
 	private IRepositorioProductos repositorio;
 	private IRepositorioCategorias repositorioCategorias; 
+	private ProductosPuerto publicador;
+
 
 	@Autowired
 	public ServicioProductos(IRepositorioProductos repositorio,
-	                          IRepositorioCategorias repositorioCategorias) { 
+	                          IRepositorioCategorias repositorioCategorias,
+	                          ProductosPuerto publicador) { 
 	    this.repositorio = repositorio;
 	    this.repositorioCategorias = repositorioCategorias; 
+	    this.publicador = publicador;
 	}
 
 
@@ -67,7 +74,14 @@ public class ServicioProductos implements IServicioProductos {
 		Producto producto = new Producto(titulo, descripcion, precio, estado, categoria, envio, vendedor);
 		producto.setFechaPublicacion(LocalDateTime.now());
 		
-		return repositorio.save(producto).getId();
+		String id = repositorio.save(producto).getId();
+		publicador.publicarEvento(new EventoProductoCreado(
+		    id,
+		    vendedor.getId(),
+		    titulo,
+		    precio
+		));
+		return id;
 	}
 
 	@Override
@@ -83,6 +97,11 @@ public class ServicioProductos implements IServicioProductos {
 		LugarRecogida lr = new LugarRecogida(descripcion, longitud, latitud);
 		p.setLugar(lr);
 		repositorio.save(p);
+		publicador.publicarEvento(new EventoProductoModificado(
+		    p.getId(),
+		    p.getTitulo(),
+		    p.getPrecio()
+		));
 	}
 
 	@Override
@@ -140,4 +159,13 @@ public class ServicioProductos implements IServicioProductos {
 	    p.setVendido(true);
 	    repositorio.save(p);
 	}
+	
+	@Override
+	@Transactional
+	public void actualizarUsuarioSimplificado(String id, String nombre,
+	                                           String apellidos, String email) {
+	    repositorio.actualizarUsuario(id, nombre, apellidos, email);
+	}
+	
+	
 }

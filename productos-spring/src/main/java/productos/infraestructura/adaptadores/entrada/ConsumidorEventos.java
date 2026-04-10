@@ -27,6 +27,14 @@ public class ConsumidorEventos {
                 obj.get("id").getAsString(),
                 obj.get("idProducto").getAsString()
             );
+        } else if (routingKey.equals("bus.usuarios.usuario-modificado")) {
+            JsonObject obj = JsonParser.parseString(body).getAsJsonObject();
+            manejadorEventos.usuarioModificado(
+                obj.get("idUsuario").getAsString(),
+                obj.get("nombre").getAsString(),
+                obj.get("apellidos").getAsString(),
+                obj.get("email").getAsString()
+            );
         }
     }
 }

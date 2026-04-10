@@ -3,6 +3,7 @@ package productos.aplicacion.puertos.salida;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
@@ -43,6 +44,14 @@ public interface IRepositorioProductos extends JpaRepository<Producto, String> {
     	    @Param("month") int month,
     	    Pageable pageable
     	);
+    
+    @Modifying
+    @Query("UPDATE UsuarioSimplificado u SET u.nombre = :nombre, " +
+           "u.apellidos = :apellidos, u.email = :email WHERE u.id = :id")
+    void actualizarUsuario(@Param("id") String id,
+                           @Param("nombre") String nombre,
+                           @Param("apellidos") String apellidos,
+                           @Param("email") String email);
 
 }
 

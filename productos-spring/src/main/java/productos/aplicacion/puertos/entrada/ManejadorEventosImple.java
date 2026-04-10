@@ -1,18 +1,12 @@
-package productos.infraestructura.adaptadores.entrada;
+package productos.aplicacion.puertos.entrada;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import productos.aplicacion.puertos.entrada.IServicioProductos;
-import productos.aplicacion.puertos.entrada.ManejadorEventos;
-
 @Component
-public class ManejadorEventosImpl implements ManejadorEventos {
+public class ManejadorEventosImple implements ManejadorEventos {
+    @Autowired private IServicioProductos servicio;
 
-    @Autowired 
-    private IServicioProductos servicio;
-
-    @Override
     public void compraventaCreada(String idCompraventa, String idProducto) {
         try {
             servicio.marcarComoVendido(idProducto);
@@ -21,8 +15,7 @@ public class ManejadorEventosImpl implements ManejadorEventos {
             System.err.println("[productos] Error: " + e.getMessage());
         }
     }
-    
-  
+
     @Override
     public void usuarioModificado(String idUsuario, String nombre,
                                    String apellidos, String email) {
@@ -32,6 +25,4 @@ public class ManejadorEventosImpl implements ManejadorEventos {
             System.err.println("[productos] Error actualizando usuario: " + e.getMessage());
         }
     }
-    
-    
 }

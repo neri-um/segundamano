@@ -79,5 +79,20 @@ public class ServicioCompraventas implements IServicioCompraventas {
 	public void marcarComoVendido(String id) throws Exception {
 	    puertoProductos.marcarComoVendido(id);
 	}
+	
+	@Override
+	public void actualizarNombreUsuario(String idUsuario, String nombre, String apellidos) {
+	    String nuevoNombre = nombre + " " + apellidos;
+
+	    repositorio.buscarPorIdVendedor(idUsuario).forEach(c -> {
+	        c.setNombreVendedor(nuevoNombre);
+	        repositorio.guardar(c);
+	    });
+
+	    repositorio.buscarPorIdComprador(idUsuario).forEach(c -> {
+	        c.setNombreComprador(nuevoNombre);
+	        repositorio.guardar(c);
+	    });
+	}
 
 }

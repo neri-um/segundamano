@@ -28,7 +28,7 @@ public class ConsumidorRabbitMQ implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		String uri = "amqp://guest:guest@localhost:5672";
+		String uri = "amqps://finmzuhw:nJqWdRwr_FGN-osSFobELS0aNnzSQQvh@collie.lmq.cloudamqp.com/finmzuhw";
 		try {
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setUri(uri);

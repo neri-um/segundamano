@@ -21,4 +21,6 @@ public interface IServicioCompraventas {
     Compraventa obtenerCompraventa(String id) throws EntidadNoEncontrada;
 
 	void marcarComoVendido(String id) throws Exception;
+	
+	void actualizarNombreUsuario(String idUsuario, String nombre, String apellidos);
 }

@@ -4,6 +4,8 @@ import compraventas.aplicacion.puertos.salida.IRepositorioCompraventas;
 import compraventas.dominio.modelo.Compraventa;
 import repositorio.EntidadNoEncontrada;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -15,6 +17,8 @@ interface MongoCompraventaRepo extends MongoRepository<Compraventa, String> {
     Page<Compraventa> findByIdComprador(String idComprador, Pageable pageable);
     Page<Compraventa> findByIdVendedor(String idVendedor, Pageable pageable);
     Page<Compraventa> findByIdCompradorAndIdVendedor(String idComprador, String idVendedor, Pageable pageable);
+    List<Compraventa> findAllByIdVendedor(String idVendedor);
+    List<Compraventa> findAllByIdComprador(String idComprador);
 }
 
 @Component
@@ -51,4 +55,16 @@ public class RepositorioCompraventasMongo implements IRepositorioCompraventas {
         return repo.findById(id)
                    .orElseThrow(() -> new EntidadNoEncontrada("Compraventa no encontrada: " + id));
     }
+    
+    @Override
+    public List<Compraventa> buscarPorIdVendedor(String idVendedor) {
+        return repo.findAllByIdVendedor(idVendedor);
+    }
+
+    @Override
+    public List<Compraventa> buscarPorIdComprador(String idComprador) {
+        return repo.findAllByIdComprador(idComprador);
+    }
+    
+    
 }
