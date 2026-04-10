@@ -17,19 +17,22 @@ import com.rabbitmq.client.Envelope;
 
 import servicio.FactoriaServicios;
 import usuarios.puertos.ManejadorEventos;
+import utils.PropertiesReader;
 
 @WebListener
 public class ConsumidorRabbitMQ implements ServletContextListener {
 
-	private final ManejadorEventos manejadorEventos = FactoriaServicios.getServicio(ManejadorEventos.class);
+	 private ManejadorEventos manejadorEventos;
 
-	private Connection connection;
-	private Channel channel;
+	    private Connection connection;
+	    private Channel channel;
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-		String uri = "amqps://finmzuhw:nJqWdRwr_FGN-osSFobELS0aNnzSQQvh@collie.lmq.cloudamqp.com/finmzuhw";
 		try {
+	        this.manejadorEventos = FactoriaServicios.getServicio(ManejadorEventos.class);
+			PropertiesReader props = new PropertiesReader("servicios.properties");
+			String uri = props.getProperty("rabbitmq.uri");
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setUri(uri);
 			connection = factory.newConnection();
@@ -49,10 +52,11 @@ public class ConsumidorRabbitMQ implements ServletContextListener {
 						throws IOException {
 
 					long deliveryTag = envelope.getDeliveryTag();
+					String routingKey = envelope.getRoutingKey();
 					String contenido = new String(body);
 					JsonObject obj = JsonParser.parseString(contenido).getAsJsonObject();
 
-					if (obj.get("tipo").getAsString().equals("compraventa-creada")) {
+					if (routingKey.equals("bus.compraventas.compraventa-creada")) {
 						manejadorEventos.compraventaCreada(obj.get("id").getAsString(),
 								obj.get("idVendedor").getAsString(), obj.get("idComprador").getAsString(),
 								obj.get("idProducto").getAsString());
