@@ -92,9 +92,11 @@ services:
       - usuarios
 
   pasarela:
-    image: nginx:alpine
+    build: ./pasarela
     ports:
-      - "8080:80"
+      - "8090:8090"
+    environment:
+      - SERVER_PORT=8090
     depends_on:
       - usuarios
       - productos
