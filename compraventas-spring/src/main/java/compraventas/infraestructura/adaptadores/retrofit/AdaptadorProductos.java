@@ -52,9 +52,10 @@ public class AdaptadorProductos implements IPuertoProductos {
     public String getRecogida(String idProducto) {
         return fetchProducto(idProducto).getLugarRecogida();
     }
-    
+
     @Override
-    public void marcarComoVendido(String idProducto) throws IOException {
-    	client.marcarComoVendido(idProducto).execute();
+    public boolean isVendido(String idProducto) {
+        return fetchProducto(idProducto).isVendido();
     }
+    
 }

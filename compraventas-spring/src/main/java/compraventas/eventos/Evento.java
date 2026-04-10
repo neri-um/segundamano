@@ -7,6 +7,8 @@ public abstract class Evento {
 	private String id;
 	private String tipo;
 
+	public Evento() {}
+	
 	public Evento(String id, String tipo) {
 		this.timestamp = LocalDateTime.now().toString();
 		this.id = id;

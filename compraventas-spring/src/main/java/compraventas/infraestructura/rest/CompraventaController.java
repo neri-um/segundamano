@@ -22,6 +22,7 @@ import javax.validation.Valid;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/compraventas", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -110,4 +111,10 @@ public class CompraventaController {
         dto.setFecha(c.getFecha());
         return dto;
     }
+    
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, String>> handleProductoYaVendido(IllegalStateException ex) {
+        return ResponseEntity.status(409).body(Map.of("error", ex.getMessage()));
+    }
+    
 }

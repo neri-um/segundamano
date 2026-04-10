@@ -9,6 +9,7 @@ public class ProductoDTO {
     private double precio;  
     private String lugarRecogida;
     private String idVendedor;
+    private boolean vendido;
 
 
     public String getId() { return id; }
@@ -28,6 +29,12 @@ public class ProductoDTO {
 	}
 	public void setIdVendedor(String idVendedor) {
 		this.idVendedor = idVendedor;
+	}
+	public boolean isVendido() {
+		return vendido;
+	}
+	public void setVendido(boolean vendido) {
+		this.vendido = vendido;
 	}
 
 }
