@@ -1,11 +1,13 @@
 package productos.infraestructura.adaptadores.entrada;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import productos.aplicacion.puertos.entrada.IServicioProductos;
 import productos.aplicacion.puertos.entrada.ManejadorEventos;
 
+@Primary
 @Component
 public class ManejadorEventosImpl implements ManejadorEventos {
 
@@ -21,4 +23,17 @@ public class ManejadorEventosImpl implements ManejadorEventos {
             System.err.println("[productos] Error: " + e.getMessage());
         }
     }
+    
+  
+    @Override
+    public void usuarioModificado(String idUsuario, String nombre,
+                                   String apellidos, String email) {
+        try {
+            servicio.actualizarUsuarioSimplificado(idUsuario, nombre, apellidos, email);
+        } catch (Exception e) {
+            System.err.println("[productos] Error actualizando usuario: " + e.getMessage());
+        }
+    }
+    
+    
 }

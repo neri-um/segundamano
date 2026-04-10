@@ -71,4 +71,6 @@ public interface IServicioProductos {
 
 	void marcarComoVendido(String idProducto) throws RepositorioException, EntidadNoEncontrada;
 
+	void actualizarUsuarioSimplificado(String idUsuario, String nombre, String apellidos, String email);
+
 }

@@ -20,7 +20,7 @@ public class ProductoDTO {
     private double latitud;
     private String usuarioVendedor;
     private String idVendedor;
-
+    private boolean vendido;
     
 	public ProductoDTO() {
 		//para el fromEntity linea 1
@@ -37,6 +37,7 @@ public class ProductoDTO {
 	    dto.categoria = p.getCategoria().getNombre(); //para que se vea bonito
 	    dto.visualizaciones = p.getVisualizaciones();
 	    dto.envio = p.isEnvio();
+	    dto.vendido = p.isVendido();
 
 	    if (p.getLugar() != null) {
 	        dto.lugarRecogida = p.getLugar().getDescripcion();
@@ -159,6 +160,14 @@ public class ProductoDTO {
 	
 	public void setIdVendedor(String idVendedor) { 
 		this.idVendedor = idVendedor; 
+	}
+
+	public boolean isVendido() {
+		return vendido;
+	}
+
+	public void setVendido(boolean vendido) {
+		this.vendido = vendido;
 	}
 	
 }

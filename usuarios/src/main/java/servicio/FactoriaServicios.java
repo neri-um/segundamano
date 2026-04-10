@@ -47,4 +47,8 @@ public class FactoriaServicios {
 			
 	}
 	
+	public static <T> void registrar(Class<T> servicio, T implementacion) {
+	    servicios.put(servicio, implementacion);
+	}
+	
 }

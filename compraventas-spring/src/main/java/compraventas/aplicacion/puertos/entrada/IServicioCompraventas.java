@@ -19,6 +19,6 @@ public interface IServicioCompraventas {
     Page<Compraventa> obtenerCompraventasEntreUsuarios(String idComprador, String idVendedor, Pageable pageable);
     
     Compraventa obtenerCompraventa(String id) throws EntidadNoEncontrada;
-
-	void marcarComoVendido(String id) throws Exception;
+	
+	void actualizarNombreUsuario(String idUsuario, String nombre, String apellidos);
 }

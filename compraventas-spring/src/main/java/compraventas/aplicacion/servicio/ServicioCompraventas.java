@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import compraventas.aplicacion.puertos.entrada.IServicioCompraventas;
+import compraventas.aplicacion.puertos.entrada.ManejadorEventos;
 import compraventas.aplicacion.puertos.salida.IPublicadorEventos;
 import compraventas.aplicacion.puertos.salida.IPuertoProductos;
 import compraventas.aplicacion.puertos.salida.IPuertoUsuarios;
@@ -17,7 +18,7 @@ import compraventas.eventos.EventoCompraventaCreada;
 import repositorio.EntidadNoEncontrada;
 
 @Service
-public class ServicioCompraventas implements IServicioCompraventas {
+public class ServicioCompraventas implements IServicioCompraventas, ManejadorEventos {
 
 	private final IRepositorioCompraventas repositorio;
 	private final IPuertoProductos puertoProductos;
@@ -36,6 +37,9 @@ public class ServicioCompraventas implements IServicioCompraventas {
 
 	@Override
 	public Compraventa realizarCompraventa(String idProducto, String idComprador) throws IOException {
+		if (puertoProductos.isVendido(idProducto)) {
+		    throw new IllegalStateException("El producto ya ha sido vendido");
+		}
 		// Obtener datos del producto
 		String idVendedor = puertoProductos.getIdVendedor(idProducto);
 		String titulo = puertoProductos.getTitulo(idProducto);
@@ -75,9 +79,27 @@ public class ServicioCompraventas implements IServicioCompraventas {
 		return repositorio.buscarPorId(id);
 	}
 	
+	
 	@Override
-	public void marcarComoVendido(String id) throws Exception {
-	    puertoProductos.marcarComoVendido(id);
+	public void actualizarNombreUsuario(String idUsuario, String nombre, String apellidos) {
+	    String nuevoNombre = nombre + " " + apellidos;
+
+	    repositorio.buscarPorIdVendedor(idUsuario).forEach(c -> {
+	        c.setNombreVendedor(nuevoNombre);
+	        repositorio.guardar(c);
+	    });
+
+	    repositorio.buscarPorIdComprador(idUsuario).forEach(c -> {
+	        c.setNombreComprador(nuevoNombre);
+	        repositorio.guardar(c);
+	    });
 	}
+
+	@Override
+    public void usuarioModificado(String idUsuario, String nombre, String apellidos) {
+        actualizarNombreUsuario(idUsuario, nombre, apellidos);
+    }
+
+
 
 }

@@ -2,10 +2,11 @@ package productos.eventos.config;
 
 import java.util.Map;
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.amqp.support.converter.SimpleMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,10 +16,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String QUEUE_NAME    = "compraventas";
+    public static final String QUEUE_NAME    = "productos";
     public static final String EXCHANGE_NAME = "bus";
     public static final String BINDING_KEY   = "bus.compraventas.#";
-    public static final String ROUTING_KEY   = "bus.compraventas.";
+    public static final String ROUTING_KEY   = "bus.productos.";
+    public static final String BINDING_KEY_USUARIOS = "bus.usuarios.#";
+
 
     @Bean
     public TopicExchange exchange() {
@@ -31,23 +34,40 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding binding(Queue queue, Exchange exchange) {
+    public Binding bindingCompraventas(Queue queue, Exchange exchange) {
         Map<String, Object> propiedades = null;
         return BindingBuilder.bind(queue).to(exchange).with(BINDING_KEY).and(propiedades);
     }
+    
+    @Bean
+    public Binding bindingUsuarios(Queue queue, Exchange exchange) {
+        return BindingBuilder.bind(queue)
+               .to(exchange).with(BINDING_KEY_USUARIOS).and((Map<String,Object>)null);
+    }
 
     @Bean
-    public MessageConverter jsonMessageConverter() {
+    public Jackson2JsonMessageConverter publishConverter() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         return new Jackson2JsonMessageConverter(mapper);
     }
 
+    // RabbitTemplate usa Jackson para publicar
     @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory cf, MessageConverter converter) {
+    public RabbitTemplate rabbitTemplate(ConnectionFactory cf) {
         RabbitTemplate rt = new RabbitTemplate(cf);
-        rt.setMessageConverter(converter);
+        rt.setMessageConverter(publishConverter());
         return rt;
+    }
+
+    // El listener usa SimpleMessageConverter → ignora __TypeId__ completamente
+    @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(
+            ConnectionFactory cf) {
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(cf);
+        factory.setMessageConverter(new SimpleMessageConverter());
+        return factory;
     }
 }

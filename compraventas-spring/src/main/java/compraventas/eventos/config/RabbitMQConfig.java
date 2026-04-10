@@ -4,6 +4,7 @@ import java.util.Map;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.DefaultJackson2JavaTypeMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ public class RabbitMQConfig {
     public static final String EXCHANGE_NAME = "bus";
     public static final String BINDING_KEY   = "bus.compraventas.#";
     public static final String ROUTING_KEY   = "bus.compraventas.";
+    public static final String BINDING_KEY_USUARIOS = "bus.usuarios.#";
 
     @Bean
     public TopicExchange exchange() {
@@ -35,13 +37,27 @@ public class RabbitMQConfig {
         Map<String, Object> propiedades = null;
         return BindingBuilder.bind(queue).to(exchange).with(BINDING_KEY).and(propiedades);
     }
+    
+    @Bean
+    public Binding bindingUsuarios(Queue queue, Exchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(BINDING_KEY_USUARIOS).and((Map<String,Object>)null);
+    }
+    
 
     @Bean
     public MessageConverter jsonMessageConverter() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        return new Jackson2JsonMessageConverter(mapper);
+
+        Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter(mapper);
+
+        DefaultJackson2JavaTypeMapper typeMapper = new DefaultJackson2JavaTypeMapper();
+        typeMapper.setTrustedPackages("*");
+        typeMapper.setTypePrecedence(DefaultJackson2JavaTypeMapper.TypePrecedence.INFERRED); // ← esta línea
+        converter.setJavaTypeMapper(typeMapper);
+
+        return converter;
     }
 
     @Bean

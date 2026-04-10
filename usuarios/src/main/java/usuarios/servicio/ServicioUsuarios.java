@@ -6,14 +6,17 @@ import java.util.List;
 import repositorio.EntidadNoEncontrada;
 import repositorio.FactoriaRepositorios;
 import repositorio.RepositorioException;
+import servicio.FactoriaServicios;
 import usuarios.modelo.Usuario;
+import usuarios.puertos.PublicadorEventos;
 import usuarios.repositorio.RepositorioUsuariosAdHocJPA;
 
 public class ServicioUsuarios implements IServicioUsuarios{
 
     private RepositorioUsuariosAdHocJPA repositorio =
             FactoriaRepositorios.getRepositorio(Usuario.class);
-
+    private PublicadorEventos publicador = FactoriaServicios.getServicio(PublicadorEventos.class);
+    
 	@Override
 	public String altaUsuario(String nombre, String apellidos, String email, String clave, LocalDate fechaNac,
 			String telefono) throws RepositorioException {
@@ -39,7 +42,9 @@ public class ServicioUsuarios implements IServicioUsuarios{
 	        throw new IllegalArgumentException("ERROR: La fecha de nacimiento no puede ser futura");
 	    }
 	    Usuario u = new Usuario(email, nombre, apellidos, clave, fechaNac, telefono);
-		return repositorio.add(u);
+		String id = repositorio.add(u);
+		publicador.usuarioCreado(u.getId(), u.getNombre(), u.getApellidos(), u.getEmail());
+		return id;
 	}
 
 	@Override
@@ -74,6 +79,12 @@ public class ServicioUsuarios implements IServicioUsuarios{
 	        usuario.setTelefono(telefono);
 	    }
 	    repositorio.update(usuario);
+	    publicador.usuarioModificado(
+	        usuario.getId(),
+	        usuario.getNombre(),
+	        usuario.getApellidos(),
+	        usuario.getEmail()
+	    );
 	}
 
 	@Override
