@@ -4,8 +4,10 @@ import com.google.gson.JsonObject;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import java.time.Instant;
+import usuarios.puertos.PublicadorEventos;
 
-public class PublicadorRabbitMQ {
+public class PublicadorRabbitMQ implements PublicadorEventos{
 
     private static final String EXCHANGE = "bus";
     private Connection connection;
@@ -27,6 +29,7 @@ public class PublicadorRabbitMQ {
                               String apellidos, String email) {
         JsonObject obj = new JsonObject();
         obj.addProperty("tipo", "usuario-creado");
+        obj.addProperty("timestamp", Instant.now().toString()); 
         obj.addProperty("idUsuario", idUsuario);
         obj.addProperty("nombre", nombre);
         obj.addProperty("apellidos", apellidos);
@@ -38,6 +41,7 @@ public class PublicadorRabbitMQ {
                                   String apellidos, String email) {
         JsonObject obj = new JsonObject();
         obj.addProperty("tipo", "usuario-modificado");
+        obj.addProperty("timestamp", Instant.now().toString()); 
         obj.addProperty("idUsuario", idUsuario);
         obj.addProperty("nombre", nombre);
         obj.addProperty("apellidos", apellidos);

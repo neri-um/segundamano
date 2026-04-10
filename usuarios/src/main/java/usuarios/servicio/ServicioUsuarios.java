@@ -6,15 +6,16 @@ import java.util.List;
 import repositorio.EntidadNoEncontrada;
 import repositorio.FactoriaRepositorios;
 import repositorio.RepositorioException;
-import usuarios.adaptadores.PublicadorRabbitMQ;
+import servicio.FactoriaServicios;
 import usuarios.modelo.Usuario;
+import usuarios.puertos.PublicadorEventos;
 import usuarios.repositorio.RepositorioUsuariosAdHocJPA;
 
 public class ServicioUsuarios implements IServicioUsuarios{
 
     private RepositorioUsuariosAdHocJPA repositorio =
             FactoriaRepositorios.getRepositorio(Usuario.class);
-    private PublicadorRabbitMQ publicador = new PublicadorRabbitMQ();
+    private PublicadorEventos publicador = FactoriaServicios.getServicio(PublicadorEventos.class);
     
 	@Override
 	public String altaUsuario(String nombre, String apellidos, String email, String clave, LocalDate fechaNac,

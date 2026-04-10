@@ -53,7 +53,7 @@ public class ConsumidorRabbitMQ implements ServletContextListener {
 					JsonObject obj = JsonParser.parseString(contenido).getAsJsonObject();
 
 					if (obj.get("tipo").getAsString().equals("compraventa-creada")) {
-						manejadorEventos.compraventaCreada(obj.get("idCompraventa").getAsString(),
+						manejadorEventos.compraventaCreada(obj.get("id").getAsString(),
 								obj.get("idVendedor").getAsString(), obj.get("idComprador").getAsString(),
 								obj.get("idProducto").getAsString());
 					}

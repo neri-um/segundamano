@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import productos.aplicacion.puertos.entrada.IServicioProductos;
+import productos.aplicacion.puertos.entrada.ManejadorEventos;
 import productos.aplicacion.puertos.salida.IRepositorioCategorias;
 import productos.aplicacion.puertos.salida.IRepositorioProductos;
 import productos.aplicacion.puertos.salida.ProductosPuerto;
@@ -27,7 +28,7 @@ import repositorio.RepositorioException;
 
 @Service
 @Transactional
-public class ServicioProductos implements IServicioProductos {
+public class ServicioProductos implements IServicioProductos, ManejadorEventos {
 
 	private IRepositorioProductos repositorio;
 	private IRepositorioCategorias repositorioCategorias; 
@@ -165,6 +166,23 @@ public class ServicioProductos implements IServicioProductos {
 	public void actualizarUsuarioSimplificado(String id, String nombre,
 	                                           String apellidos, String email) {
 	    repositorio.actualizarUsuario(id, nombre, apellidos, email);
+	}
+
+
+	@Override
+	public void compraventaCreada(String idCompraventa, String idProducto) {
+        try {
+            marcarComoVendido(idProducto);
+        } catch (Exception e) {
+            System.err.println("[productos] Error: " + e.getMessage());
+        }
+	}
+
+
+	@Override
+	public void usuarioModificado(String idUsuario, String nombre, String apellidos, String email) {
+        actualizarUsuarioSimplificado(idUsuario, nombre, apellidos, email);
+		
 	}
 	
 	

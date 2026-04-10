@@ -2,7 +2,7 @@ package compraventas.eventos;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import compraventas.aplicacion.puertos.entrada.IServicioCompraventas;
+import compraventas.aplicacion.puertos.entrada.ManejadorEventos;
 import compraventas.eventos.config.RabbitMQConfig;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class ConsumidorEventos {
 
     @Autowired
-    private IServicioCompraventas servicio;
+    private ManejadorEventos manejadorEventos;
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
     public void handleEvent(Message mensaje) {
@@ -22,7 +22,7 @@ public class ConsumidorEventos {
 
         if (routingKey.equals("bus.usuarios.usuario-modificado")) {
             JsonObject obj = JsonParser.parseString(body).getAsJsonObject();
-            servicio.actualizarNombreUsuario(
+            manejadorEventos.usuarioModificado(
                 obj.get("idUsuario").getAsString(),
                 obj.get("nombre").getAsString(),
                 obj.get("apellidos").getAsString()

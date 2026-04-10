@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import compraventas.aplicacion.puertos.entrada.IServicioCompraventas;
+import compraventas.aplicacion.puertos.entrada.ManejadorEventos;
 import compraventas.aplicacion.puertos.salida.IPublicadorEventos;
 import compraventas.aplicacion.puertos.salida.IPuertoProductos;
 import compraventas.aplicacion.puertos.salida.IPuertoUsuarios;
@@ -17,7 +18,7 @@ import compraventas.eventos.EventoCompraventaCreada;
 import repositorio.EntidadNoEncontrada;
 
 @Service
-public class ServicioCompraventas implements IServicioCompraventas {
+public class ServicioCompraventas implements IServicioCompraventas, ManejadorEventos {
 
 	private final IRepositorioCompraventas repositorio;
 	private final IPuertoProductos puertoProductos;
@@ -95,4 +96,8 @@ public class ServicioCompraventas implements IServicioCompraventas {
 	    });
 	}
 
+	@Override
+    public void usuarioModificado(String idUsuario, String nombre, String apellidos) {
+        actualizarNombreUsuario(idUsuario, nombre, apellidos);
+    }
 }
