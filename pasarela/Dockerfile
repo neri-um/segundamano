@@ -1,11 +1,12 @@
-FROM maven:3.8.5-openjdk-11 AS build
-WORKDIR /app
+FROM maven:3.8.5-jdk-11 AS build
+WORKDIR /app/
 COPY pom.xml .
+RUN mvn -e -B dependency:resolve
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN mvn package -DskipTests
 
-FROM openjdk:11-jre-slim
-WORKDIR /app
-COPY --from=build /app/target/pasarela-0.0.1-SNAPSHOT.jar app.jar
+FROM eclipse-temurin:11
+COPY --from=build /app/target/pasarela-0.0.1-SNAPSHOT.jar /app.jar
+CMD ["java", "-jar", "/app.jar"]
+
 EXPOSE 8090
-ENTRYPOINT ["java", "-jar", "app.jar"]
