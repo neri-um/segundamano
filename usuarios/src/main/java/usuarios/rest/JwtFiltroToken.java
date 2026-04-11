@@ -13,7 +13,6 @@ import javax.ws.rs.core.*;
 import javax.ws.rs.ext.Provider;
 import javax.ws.rs.Priorities;
 
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
@@ -21,7 +20,7 @@ import io.jsonwebtoken.Jwts;
 @Priority(Priorities.AUTHENTICATION)
 public class JwtFiltroToken implements ContainerRequestFilter {
 
-    private static final String SECRET_KEY = "claveSecretaSuperSegura123";
+    private static final String SECRET_KEY = "1ea4b589e0dc097269b0a67331ad32d130aabb80";
 
     @Context
     private ResourceInfo resourceInfo;
@@ -32,9 +31,17 @@ public class JwtFiltroToken implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) {
 
+        // Null check primero
+        if (resourceInfo == null || resourceInfo.getResourceMethod() == null) {
+            return;
+        }
+
         // Rutas públicas con @PermitAll no requieren token
-        if (resourceInfo.getResourceMethod()
-                        .isAnnotationPresent(PermitAll.class)) {
+        boolean esPublico = resourceInfo.getResourceMethod()
+                                .isAnnotationPresent(PermitAll.class)
+                            || resourceInfo.getResourceClass()
+                                .isAnnotationPresent(PermitAll.class);
+        if (esPublico) {
             return;
         }
 
@@ -49,18 +56,15 @@ public class JwtFiltroToken implements ContainerRequestFilter {
         String token = authorization.substring("Bearer ".length()).trim();
 
         try {
-            // Validar token
             Claims claims = Jwts.parser()
                     .setSigningKey(SECRET_KEY)
                     .parseClaimsJws(token)
                     .getBody();
 
-            // Pasar claims al controlador
             servletRequest.setAttribute("claims", claims);
 
             // Control de roles con @RolesAllowed
-            if (resourceInfo.getResourceMethod()
-                            .isAnnotationPresent(RolesAllowed.class)) {
+            if (resourceInfo.getResourceMethod().isAnnotationPresent(RolesAllowed.class)) {
 
                 Set<String> rolesUsuario = new HashSet<>(
                     Arrays.asList(claims.get("roles", String.class).split(",")));
