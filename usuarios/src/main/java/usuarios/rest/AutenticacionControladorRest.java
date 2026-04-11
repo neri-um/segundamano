@@ -44,9 +44,8 @@ public class AutenticacionControladorRest {
         claims.put("sub", usuario.getId());
         claims.put("name", usuario.getNombre());
         claims.put("roles", usuario.isAdmin() ? "ADMINISTRADOR" : "USUARIO");
-        
 
-        Date caducidad = new Date(System.currentTimeMillis() + 3600 * 1000); // 1 hora
+        Date caducidad = new Date(System.currentTimeMillis() + 3600 * 1000);
 
         String token = Jwts.builder()
                 .setClaims(claims)
@@ -54,6 +53,12 @@ public class AutenticacionControladorRest {
                 .setExpiration(caducidad)
                 .compact();
 
-        return Response.ok("{\"token\": \"" + token + "\"}").build();
+        Map<String, Object> respuesta = new HashMap<>();
+        respuesta.put("token", token);
+        respuesta.put("identificador", usuario.getId());
+        respuesta.put("nombre", usuario.getNombre());
+        respuesta.put("roles", usuario.isAdmin() ? "ADMINISTRADOR" : "USUARIO");
+
+        return Response.ok(respuesta).build();
     }
 }
