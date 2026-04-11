@@ -43,7 +43,7 @@ public class AutenticacionControladorRest {
         Map<String, Object> claims = new HashMap<>();
         claims.put("sub", usuario.getId());
         claims.put("name", usuario.getNombre());
-        claims.put("roles", "USUARIO");
+        claims.put("roles", usuario.isAdmin() ? "ADMINISTRADOR" : "USUARIO");
         
 
         Date caducidad = new Date(System.currentTimeMillis() + 3600 * 1000); // 1 hora
