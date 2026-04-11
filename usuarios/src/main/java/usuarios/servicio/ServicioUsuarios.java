@@ -41,6 +41,13 @@ public class ServicioUsuarios implements IServicioUsuarios{
 	    if (fechaNac.isAfter(LocalDate.now())) {
 	        throw new IllegalArgumentException("ERROR: La fecha de nacimiento no puede ser futura");
 	    }
+
+	    try {
+	        repositorio.getByEmail(email);
+	        throw new IllegalArgumentException("ERROR: Ya existe un usuario con ese email");
+	    } catch (EntidadNoEncontrada e) {
+	        //no existe, podemos continuar
+	    }
 	    Usuario u = new Usuario(email, nombre, apellidos, clave, fechaNac, telefono);
 		String id = repositorio.add(u);
 		publicador.usuarioCreado(u.getId(), u.getNombre(), u.getApellidos(), u.getEmail());
