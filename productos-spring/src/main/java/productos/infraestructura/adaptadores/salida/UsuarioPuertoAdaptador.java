@@ -14,7 +14,7 @@ public class UsuarioPuertoAdaptador implements UsuarioPuerto {
 
     public UsuarioPuertoAdaptador() {
         Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://localhost:8080/")   
+        		.baseUrl("http://usuarios:8080/")  
             .addConverterFactory(GsonConverterFactory.create())
             .build();
         this.usuariosRetrofit = retrofit.create(UsuariosRetrofit.class);
