@@ -9,12 +9,13 @@ import repositorio.RepositorioException;
 import servicio.FactoriaServicios;
 import usuarios.modelo.Usuario;
 import usuarios.puertos.PublicadorEventos;
-import usuarios.repositorio.RepositorioUsuariosAdHocJPA;
+import usuarios.repositorio.RepositorioUsuariosAdHoc;
+
 
 public class ServicioUsuarios implements IServicioUsuarios{
 
-    private RepositorioUsuariosAdHocJPA repositorio =
-            FactoriaRepositorios.getRepositorio(Usuario.class);
+	private RepositorioUsuariosAdHoc repositorio =
+	        FactoriaRepositorios.getRepositorio(Usuario.class);
     private PublicadorEventos publicador = FactoriaServicios.getServicio(PublicadorEventos.class);
     
 	@Override
