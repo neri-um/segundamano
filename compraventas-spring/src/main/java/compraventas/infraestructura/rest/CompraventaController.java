@@ -2,8 +2,6 @@ package compraventas.infraestructura.rest;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Map;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +28,7 @@ import compraventas.dominio.modelo.Compraventa;
 import compraventas.infraestructura.rest.dto.CompraventaRequestDTO;
 import compraventas.infraestructura.rest.dto.CompraventaResponseDTO;
 import repositorio.EntidadNoEncontrada;
+
 @RestController
 @RequestMapping(value = "/api/compraventas", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CompraventaController {
@@ -38,6 +37,19 @@ public class CompraventaController {
 
     @Autowired
     private PagedResourcesAssembler<CompraventaResponseDTO> pagedResourcesAssembler;
+
+    // Ensamblador que añade el link "self" a cada elemento del listado
+    private final RepresentationModelAssembler<CompraventaResponseDTO, EntityModel<CompraventaResponseDTO>> assembler =
+        dto -> {
+            EntityModel<CompraventaResponseDTO> model = EntityModel.of(dto);
+            try {
+                model.add(WebMvcLinkBuilder
+                    .linkTo(WebMvcLinkBuilder.methodOn(CompraventaController.class)
+                        .getCompraventa(dto.getId()))
+                    .withSelfRel());
+            } catch (EntidadNoEncontrada ignored) { /* linkTo no ejecuta el método real */ }
+            return model;
+        };
 
     public CompraventaController(IServicioCompraventas servicio) {
         this.servicio = servicio;
@@ -59,46 +71,44 @@ public class CompraventaController {
     @GetMapping("/comprador/{idComprador}")
     @PreAuthorize("hasAuthority('USUARIO') and #idComprador == authentication.name")
     public PagedModel<EntityModel<CompraventaResponseDTO>> getComprasDeUsuario(
-            @PathVariable String idComprador,
-            Pageable pageable) {
+            @PathVariable String idComprador, Pageable pageable) {
 
         Page<CompraventaResponseDTO> resultado = servicio
                 .obtenerComprasDeUsuario(idComprador, pageable)
                 .map(this::toDTO);
 
-        return pagedResourcesAssembler.toModel(resultado);
+        return pagedResourcesAssembler.toModel(resultado, assembler);
     }
-    
+
     @GetMapping("/vendedor/{idVendedor}")
     @PreAuthorize("hasAuthority('USUARIO') and #idVendedor == authentication.name")
     public PagedModel<EntityModel<CompraventaResponseDTO>> getVentasDeUsuario(
-            @PathVariable String idVendedor,
-            Pageable pageable) {
+            @PathVariable String idVendedor, Pageable pageable) {
 
         Page<CompraventaResponseDTO> resultado = servicio
                 .obtenerVentasDeUsuario(idVendedor, pageable)
                 .map(this::toDTO);
 
-        return pagedResourcesAssembler.toModel(resultado);
+        return pagedResourcesAssembler.toModel(resultado, assembler);
     }
 
     @GetMapping("/comprador/{idComprador}/vendedor/{idVendedor}")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public PagedModel<EntityModel<CompraventaResponseDTO>> getCompraventasEntreUsuarios(
             @PathVariable String idComprador,
-            @PathVariable String idVendedor,
-            Pageable pageable) {
+            @PathVariable String idVendedor, Pageable pageable) {
 
         Page<CompraventaResponseDTO> resultado = servicio
                 .obtenerCompraventasEntreUsuarios(idComprador, idVendedor, pageable)
                 .map(this::toDTO);
 
-        return pagedResourcesAssembler.toModel(resultado);
+        return pagedResourcesAssembler.toModel(resultado, assembler);
     }
-    
-    
+
     @GetMapping("/{id}")
-    public EntityModel<CompraventaResponseDTO> getCompraventa(@PathVariable String id) throws EntidadNoEncontrada {
+    public EntityModel<CompraventaResponseDTO> getCompraventa(@PathVariable String id)
+            throws EntidadNoEncontrada {
+
         EntityModel<CompraventaResponseDTO> model = EntityModel.of(toDTO(servicio.obtenerCompraventa(id)));
         model.add(WebMvcLinkBuilder
                 .linkTo(WebMvcLinkBuilder.methodOn(CompraventaController.class).getCompraventa(id))
@@ -120,10 +130,4 @@ public class CompraventaController {
         dto.setFecha(c.getFecha());
         return dto;
     }
-    
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<Map<String, String>> handleProductoYaVendido(IllegalStateException ex) {
-        return ResponseEntity.status(409).body(Map.of("error", ex.getMessage()));
-    }
-    
 }
