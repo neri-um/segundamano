@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import compraventas.aplicacion.puertos.entrada.IServicioCompraventas;
 import compraventas.aplicacion.puertos.entrada.ManejadorEventos;
+import compraventas.aplicacion.puertos.salida.DatosProducto;
 import compraventas.aplicacion.puertos.salida.IPublicadorEventos;
 import compraventas.aplicacion.puertos.salida.IPuertoProductos;
 import compraventas.aplicacion.puertos.salida.IPuertoUsuarios;
@@ -37,25 +38,29 @@ public class ServicioCompraventas implements IServicioCompraventas, ManejadorEve
 
 	@Override
 	public Compraventa realizarCompraventa(String idProducto, String idComprador) throws IOException {
-		if (puertoProductos.isVendido(idProducto)) {
-		    throw new IllegalStateException("El producto ya ha sido vendido");
-		}
-		// Obtener datos del producto
-		String idVendedor = puertoProductos.getIdVendedor(idProducto);
-		String titulo = puertoProductos.getTitulo(idProducto);
-		double precio = puertoProductos.getPrecio(idProducto);
-		String recogida = puertoProductos.getRecogida(idProducto);
+	    DatosProducto producto = puertoProductos.getProducto(idProducto);
 
-		// Obtener nombres de usuarios
-		String nombreVendedor = puertoUsuarios.getNombreUsuario(idVendedor);
-		String nombreComprador = puertoUsuarios.getNombreUsuario(idComprador);
+	    if (producto.isVendido()) {
+	        throw new IllegalStateException("El producto ya ha sido vendido");
+	    }
 
-		Compraventa c = new Compraventa(idProducto, titulo, precio, recogida, idVendedor, nombreVendedor, idComprador,
-				nombreComprador);
-		String id = repositorio.guardar(c).getId();
+	    String nombreVendedor = puertoUsuarios.getNombreUsuario(producto.getIdVendedor());
+	    String nombreComprador = puertoUsuarios.getNombreUsuario(idComprador);
 
-		publicadorEventos.publicarEvento(new EventoCompraventaCreada(id, idVendedor, idComprador, idProducto));
-		return c;
+	    Compraventa c = new Compraventa(
+	        idProducto,
+	        producto.getTitulo(),
+	        producto.getPrecio(),
+	        producto.getRecogida(),
+	        producto.getIdVendedor(),
+	        nombreVendedor,
+	        idComprador,
+	        nombreComprador
+	    );
+
+	    String id = repositorio.guardar(c).getId();
+	    publicadorEventos.publicarEvento(new EventoCompraventaCreada(id, producto.getIdVendedor(), idComprador, idProducto));
+	    return c;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package compraventas.infraestructura.adaptadores.retrofit;
 
+import compraventas.aplicacion.puertos.salida.DatosProducto;
 import compraventas.aplicacion.puertos.salida.IPuertoProductos;
 import compraventas.infraestructura.adaptadores.dto.ProductoDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,28 +35,14 @@ public class AdaptadorProductos implements IPuertoProductos {
     }
 
     @Override
-    public String getIdVendedor(String idProducto) {
-        return fetchProducto(idProducto).getIdVendedor(); 
+    public DatosProducto getProducto(String idProducto) {
+        ProductoDTO dto = fetchProducto(idProducto);
+        return new DatosProducto(
+            dto.getIdVendedor(),
+            dto.getTitulo(),
+            dto.getPrecio(),
+            dto.getLugarRecogida(),
+            dto.isVendido()
+        );
     }
-
-    @Override
-    public String getTitulo(String idProducto) {
-        return fetchProducto(idProducto).getTitulo();
-    }
-
-    @Override
-    public double getPrecio(String idProducto) {
-        return fetchProducto(idProducto).getPrecio();
-    }
-
-    @Override
-    public String getRecogida(String idProducto) {
-        return fetchProducto(idProducto).getLugarRecogida();
-    }
-
-    @Override
-    public boolean isVendido(String idProducto) {
-        return fetchProducto(idProducto).isVendido();
-    }
-    
 }
