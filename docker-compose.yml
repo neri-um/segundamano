@@ -51,11 +51,9 @@ services:
     ports:
       - "8081:8080"
     environment:
-      - DB_HOST=mysql
-      - DB_PORT=3306
-      - DB_NAME=db_usuarios
-      - DB_USER=root
-      - DB_PASSWORD=root
+      - JAVAX_PERSISTENCE_JDBC_URL=jdbc:mysql://mysql:3306/db_usuarios?serverTimezone=CET
+      - JAVAX_PERSISTENCE_JDBC_USER=root
+      - JAVAX_PERSISTENCE_JDBC_PASSWORD=root
       - RABBITMQ_HOST=rabbitmq
     depends_on:
       - mysql
