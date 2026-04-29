@@ -16,8 +16,7 @@ public class PublicadorRabbitMQ implements PublicadorEventos {
 
 	public PublicadorRabbitMQ() {
 		try {
-			PropertiesReader props = new PropertiesReader("servicios.properties");
-			String uri = props.getProperty("rabbitmq.uri");
+            String uri = resolverUri();
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setUri(uri);
 			connection = factory.newConnection();
@@ -28,6 +27,16 @@ public class PublicadorRabbitMQ implements PublicadorEventos {
 		}
 	}
 
+    private static String resolverUri() throws Exception {
+        String host = System.getenv("RABBITMQ_HOST");
+        if (host != null && !host.isBlank()) {
+            return "amqp://guest:guest@" + host + ":5672";
+        }
+        PropertiesReader props = new PropertiesReader("servicios.properties");
+        return props.getProperty("rabbitmq.uri");
+    }
+	
+	
 	public void usuarioCreado(String idUsuario, String nombre, String apellidos, String email) {
 		JsonObject obj = new JsonObject();
 		obj.addProperty("tipo", "usuario-creado");

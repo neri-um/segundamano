@@ -31,8 +31,7 @@ public class ConsumidorRabbitMQ implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		try {
 	        this.manejadorEventos = FactoriaServicios.getServicio(ManejadorEventos.class);
-			PropertiesReader props = new PropertiesReader("servicios.properties");
-			String uri = props.getProperty("rabbitmq.uri");
+            String uri = resolverUri();
 			ConnectionFactory factory = new ConnectionFactory();
 			factory.setUri(uri);
 			connection = factory.newConnection();
@@ -70,6 +69,15 @@ public class ConsumidorRabbitMQ implements ServletContextListener {
 		}
 	}
 
+    private static String resolverUri() throws Exception {
+        String host = System.getenv("RABBITMQ_HOST");
+        if (host != null && !host.isBlank()) {
+            return "amqp://guest:guest@" + host + ":5672";
+        }
+        PropertiesReader props = new PropertiesReader("servicios.properties");
+        return props.getProperty("rabbitmq.uri");
+    }
+	
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		try {
