@@ -79,7 +79,9 @@ public class ServicioCategorias implements IServicioCategorias {
         if (descripcion == null || descripcion.isEmpty())
             throw new IllegalArgumentException("ERROR: descripcion no puede ser null o vacía");
 
-        repositorio.actualizarDescripcion(idCategoria, descripcion);
+        Categoria categoria = getCategoria(idCategoria); // ya lanza EntidadNoEncontrada si no existe
+        categoria.setDescripcion(descripcion);
+        repositorio.save(categoria);
     }
 
     @Override

@@ -2,25 +2,21 @@ package productos.aplicacion.puertos.salida;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import productos.dominio.modelo.Categoria;
 import repositorio.EntidadNoEncontrada;
 import repositorio.RepositorioException;
 import org.springframework.data.jpa.repository.Query;
-public interface IRepositorioCategorias extends JpaRepository<Categoria, String> {
+
+@NoRepositoryBean
+public interface IRepositorioCategorias extends CrudRepository<Categoria, String> {
 
     @Query("SELECT c FROM Categoria c WHERE c.padre IS NULL")
     List<Categoria> recuperarCategoriasRaiz() throws RepositorioException;
-
-    @Modifying
-    @Transactional
-    @Query("UPDATE Categoria c SET c.descripcion = :descripcion WHERE c.id = :id")
-    void actualizarDescripcion(@Param("id") String id, @Param("descripcion") String descripcion) 
-        throws RepositorioException, EntidadNoEncontrada;
 
     @Query("SELECT c FROM Categoria c WHERE c.padre.id = :id")
     List<Categoria> recuperarDescendientes(@Param("id") String id) 

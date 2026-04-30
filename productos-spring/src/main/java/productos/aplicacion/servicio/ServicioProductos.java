@@ -15,6 +15,7 @@ import productos.aplicacion.puertos.entrada.IServicioProductos;
 import productos.aplicacion.puertos.entrada.ManejadorEventos;
 import productos.aplicacion.puertos.salida.IRepositorioCategorias;
 import productos.aplicacion.puertos.salida.IRepositorioProductos;
+import productos.aplicacion.puertos.salida.IRepositorioUsuarios;
 import productos.aplicacion.puertos.salida.ProductosPuerto;
 import productos.dominio.modelo.Categoria;
 import productos.dominio.modelo.Estado;
@@ -33,15 +34,17 @@ public class ServicioProductos implements IServicioProductos, ManejadorEventos {
 	private IRepositorioProductos repositorio;
 	private IRepositorioCategorias repositorioCategorias; 
 	private ProductosPuerto publicador;
-
+	private IRepositorioUsuarios repositorioUsuarios;
 
 	@Autowired
 	public ServicioProductos(IRepositorioProductos repositorio,
 	                          IRepositorioCategorias repositorioCategorias,
-	                          ProductosPuerto publicador) { 
+	                          ProductosPuerto publicador,
+	                          IRepositorioUsuarios repositorioUsuarios) {
 	    this.repositorio = repositorio;
-	    this.repositorioCategorias = repositorioCategorias; 
+	    this.repositorioCategorias = repositorioCategorias;
 	    this.publicador = publicador;
+	    this.repositorioUsuarios = repositorioUsuarios;
 	}
 
 
@@ -165,7 +168,14 @@ public class ServicioProductos implements IServicioProductos, ManejadorEventos {
 	@Transactional
 	public void actualizarUsuarioSimplificado(String id, String nombre,
 	                                           String apellidos, String email) {
-	    repositorio.actualizarUsuario(id, nombre, apellidos, email);
+	    Optional<UsuarioSimplificado> resultado = repositorioUsuarios.findById(id);
+	    if (resultado.isPresent()) {
+	        UsuarioSimplificado usuario = resultado.get();
+	        usuario.setNombre(nombre);
+	        usuario.setApellidos(apellidos);
+	        usuario.setEmail(email);
+	        repositorioUsuarios.save(usuario);
+	    }
 	}
 
 
