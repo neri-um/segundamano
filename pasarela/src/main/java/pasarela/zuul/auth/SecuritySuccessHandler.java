@@ -1,11 +1,11 @@
 package pasarela.zuul.auth;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -15,22 +15,35 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Component
 public class SecuritySuccessHandler implements AuthenticationSuccessHandler {
 
+    @Autowired
+    private AutenticacionServicio autenticacionServicio;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
-	
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
             HttpServletResponse response, Authentication authentication)
             throws IOException {
 
-        DefaultOAuth2User usuario = (DefaultOAuth2User) authentication.getPrincipal();
+        DefaultOAuth2User oauth2User = (DefaultOAuth2User) authentication.getPrincipal();
+        String githubLogin = (String) oauth2User.getAttributes().get("login");
 
-        Map<String, Object> claims = new HashMap<>();
-        String login = (String) usuario.getAttributes().get("login");
-        String name  = (String) usuario.getAttributes().get("name");
-        claims.put("sub", login);
-        claims.put("name", name != null ? name : login);
-        claims.put("roles", "USUARIO");
+        // Consultar el microservicio Usuarios
+        Map<String, Object> usuario = autenticacionServicio.buscarPorGithubLogin(githubLogin);
 
+        if (usuario == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"error\":\"Usuario de GitHub no registrado\"}");
+            return;
+        }
+
+        String id     = String.valueOf(usuario.get("id"));
+        String nombre = usuario.get("nombre") + " " + usuario.get("apellidos");
+        String roles  = usuario.get("admin") != null && (Boolean) usuario.get("admin")
+                        ? "ADMINISTRADOR" : "USUARIO";
+
+        Map<String, Object> claims = Map.of("sub", id, "name", nombre, "roles", roles);
         String token = JwtUtils.generateToken(claims);
 
         Cookie cookie = new Cookie("jwt", token);
@@ -39,14 +52,7 @@ public class SecuritySuccessHandler implements AuthenticationSuccessHandler {
         cookie.setPath("/");
         response.addCookie(cookie);
 
-        // Devolver DTO como JSON en vez de texto plano
-        LoginResponseDTO dto = new LoginResponseDTO(
-            token,
-            login,
-            name != null ? name : login,
-            "USUARIO"
-        );
-
+        LoginResponseDTO dto = new LoginResponseDTO(token, id, nombre, roles);
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(dto));
     }

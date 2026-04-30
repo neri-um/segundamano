@@ -12,6 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
 import io.jsonwebtoken.Claims;
+import repositorio.EntidadNoEncontrada;
 import servicio.FactoriaServicios;
 import usuarios.modelo.Usuario;
 import usuarios.rest.dto.ListadoUsuariosDTO;
@@ -109,5 +110,18 @@ public class UsuariosControladorRest {
         Usuario usuario = servicio.recuperarUsuario(id);
         return Response.ok(UsuarioResumenDTO.fromEntity(usuario)).build();
     }
+    
+    @GET
+    @Path("github/{login}")
+    @PermitAll
+    public Response getUsuarioPorGithub(@PathParam("login") String login) throws Exception {
+        try {
+            Usuario usuario = servicio.buscarPorGithubLogin(login);
+            return Response.ok(UsuarioResumenDTO.fromEntity(usuario)).build();
+        } catch (EntidadNoEncontrada e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+    
     
 }

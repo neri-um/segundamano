@@ -35,4 +35,23 @@ public class RepositorioUsuariosAdHocJPA extends RepositorioUsuariosJPA
             EntityManagerHelper.closeEntityManager();
         }
     }
+    
+    @Override
+    public Usuario getByGithubLogin(String githubLogin) throws EntidadNoEncontrada, RepositorioException {
+        try {
+            EntityManager em = EntityManagerHelper.getEntityManager();
+            TypedQuery<Usuario> query = em.createQuery(
+                "SELECT u FROM Usuario u WHERE u.githubLogin = :githubLogin", Usuario.class);
+            query.setParameter("githubLogin", githubLogin);
+            query.setHint(QueryHints.REFRESH, HintValues.TRUE);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            throw new EntidadNoEncontrada("Usuario con githubLogin " + githubLogin + " no encontrado.");
+        } catch (RuntimeException e) {
+            throw new RepositorioException("Error al buscar usuario por githubLogin.", e);
+        } finally {
+            EntityManagerHelper.closeEntityManager();
+        }
+    }
+    
 }

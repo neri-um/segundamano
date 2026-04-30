@@ -32,4 +32,16 @@ public class AutenticacionServicio {
             return null;
         }
     }
+    
+    public Map<String, Object> buscarPorGithubLogin(String githubLogin) {
+        try {
+            retrofit2.Response<Map<String, Object>> resp =
+                cliente.getUsuarioPorGithub(githubLogin).execute();
+            if (resp.isSuccessful() && resp.body() != null) return resp.body();
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
 }

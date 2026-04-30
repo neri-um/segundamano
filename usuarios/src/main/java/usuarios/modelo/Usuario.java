@@ -22,7 +22,9 @@ public class Usuario implements Identificable {
 	private boolean admin;
 	private int contadorVentas = 0;
 	private int contadorCompras = 0;
+	private String githubLogin;
 
+	
 	public Usuario() {
 		// JPA
 	}
@@ -122,6 +124,9 @@ public class Usuario implements Identificable {
 		this.contadorCompras = contadorCompras;
 	}
 
+	public String getGithubLogin() { return githubLogin; }
+	public void setGithubLogin(String githubLogin) { this.githubLogin = githubLogin; }
+	
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", email=" + email + ", nombre=" + nombre + ", apellidos=" + apellidos + ", clave="

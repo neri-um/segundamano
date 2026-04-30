@@ -24,4 +24,6 @@ public interface IServicioUsuarios {
 	void incrementarVentas(String idUsuario) throws RepositorioException;
 
 	void incrementarCompras(String idUsuario) throws RepositorioException;
+	
+	Usuario buscarPorGithubLogin(String githubLogin) throws RepositorioException, EntidadNoEncontrada;
 }

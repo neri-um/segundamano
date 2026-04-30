@@ -141,5 +141,8 @@ public class ServicioUsuarios implements IServicioUsuarios{
 	    }
 	}
 
-	
+	@Override
+	public Usuario buscarPorGithubLogin(String githubLogin) throws RepositorioException, EntidadNoEncontrada {
+	    return repositorio.getByGithubLogin(githubLogin);
+	}
 }

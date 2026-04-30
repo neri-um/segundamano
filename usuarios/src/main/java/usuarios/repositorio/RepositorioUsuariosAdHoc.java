@@ -13,4 +13,6 @@ import usuarios.modelo.Usuario;
 public interface RepositorioUsuariosAdHoc extends RepositorioString<Usuario> {
 
     Usuario getByEmail(String email) throws EntidadNoEncontrada, RepositorioException;
+    
+    Usuario getByGithubLogin(String githubLogin) throws EntidadNoEncontrada, RepositorioException;
 }
