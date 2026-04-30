@@ -1,6 +1,7 @@
 package pasarela.zuul.auth;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import retrofit2.Retrofit;
@@ -10,9 +11,9 @@ public class AutenticacionServicio {
 
     private final UsuariosRestClient cliente;
 
-    public AutenticacionServicio() {
+    public AutenticacionServicio(@Value("${microservicio.usuarios.url}") String baseUrl) {
         Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://usuarios:8080/")
+            .baseUrl(baseUrl)                   
             .addConverterFactory(GsonConverterFactory.create())
             .build();
         this.cliente = retrofit.create(UsuariosRestClient.class);
