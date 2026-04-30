@@ -76,6 +76,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_RABBITMQ_ADDRESSES=amqp://guest:guest@rabbitmq:5672
+      - MICROSERVICIO_USUARIOS_URL=http://usuarios:8080/
     depends_on:
       mysql:
         condition: service_healthy
