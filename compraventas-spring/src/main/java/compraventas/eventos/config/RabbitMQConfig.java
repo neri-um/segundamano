@@ -18,7 +18,7 @@ public class RabbitMQConfig {
 
     public static final String QUEUE_NAME    = "compraventas";
     public static final String EXCHANGE_NAME = "bus";
-    public static final String BINDING_KEY   = "bus.compraventas.#";
+    public static final String BINDING_KEY   = "bus.usuarios.#";
     public static final String ROUTING_KEY   = "bus.compraventas.";
 
     @Bean
