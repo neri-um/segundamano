@@ -32,7 +32,12 @@ public class ControllerAuth {
             cookie.setPath("/");
             response.addCookie(cookie);
 
-            return ResponseEntity.ok(token);
+            // Gson deserializa números como Double, usar String.valueOf por seguridad
+            String identificador = String.valueOf(claims.get("identificador"));
+            String nombre        = String.valueOf(claims.get("nombre"));
+            String roles         = String.valueOf(claims.get("roles"));
+
+            return ResponseEntity.ok(new LoginResponseDTO(token, identificador, nombre, roles));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
         }
