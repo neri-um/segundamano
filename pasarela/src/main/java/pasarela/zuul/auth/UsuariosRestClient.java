@@ -12,8 +12,8 @@ import retrofit2.http.Path;
 public interface UsuariosRestClient {
 
 	@FormUrlEncoded
-	@POST("api/usuarios/auth/login")
-	Call<Map<String, Object>> login(@Field("username") String username, @Field("password") String password);
+	@POST("api/usuarios/credenciales")
+	Call<Map<String, Object>> verificarCredenciales(@Field("username") String username, @Field("password") String password);
 	
 	@GET("api/usuarios/github/{login}")
 	Call<Map<String, Object>> getUsuarioPorGithub(@Path("login") String login);

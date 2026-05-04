@@ -21,25 +21,43 @@ public class ControllerAuth {
             @RequestParam String password,
             HttpServletResponse response) {
 
-        Map<String, Object> claims = autenticacionServicio.verificarCredenciales(username, password);
+        Map<String, Object> usuario = autenticacionServicio.verificarCredenciales(username, password);
 
-        if (claims != null) {
+        if (usuario != null) {
+            String identificador = String.valueOf(usuario.get("id"));
+            String nombre = usuario.get("nombre") != null ? String.valueOf(usuario.get("nombre")) : "";
+            String apellidos = usuario.get("apellidos") != null ? String.valueOf(usuario.get("apellidos")) : "";
+            String nombreCompleto = (nombre + " " + apellidos).trim();
+
+            String roles = usuario.get("roles") != null
+                    ? String.valueOf(usuario.get("roles"))
+                    : (Boolean.TRUE.equals(usuario.get("admin")) ? "ADMINISTRADOR" : "USUARIO");
+
+            Map<String, Object> claims = Map.of(
+                    "sub", identificador,
+                    "name", nombreCompleto,
+                    "roles", roles
+            );
+
             String token = JwtUtils.generateToken(claims);
-
             Cookie cookie = new Cookie("jwt", token);
-            cookie.setHttpOnly(true);
             cookie.setMaxAge(3600);
+            cookie.setHttpOnly(true);
             cookie.setPath("/");
             response.addCookie(cookie);
-
-            // Gson deserializa números como Double, usar String.valueOf por seguridad
-            String identificador = String.valueOf(claims.get("identificador"));
-            String nombre        = String.valueOf(claims.get("nombre"));
-            String roles         = String.valueOf(claims.get("roles"));
-
-            return ResponseEntity.ok(new LoginResponseDTO(token, identificador, nombre, roles));
+            return ResponseEntity.ok(new LoginResponseDTO(token, identificador, nombreCompleto, roles));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("jwt", "");
+        cookie.setMaxAge(0);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return ResponseEntity.noContent().build();
     }
 }

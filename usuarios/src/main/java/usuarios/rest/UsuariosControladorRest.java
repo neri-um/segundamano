@@ -2,8 +2,10 @@ package usuarios.rest;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -50,6 +52,32 @@ public class UsuariosControladorRest {
         return Response.created(nuevaURL)
                        .entity(new UsuarioCreadoDTO(id))  
                        .build();
+    }
+
+    // POST /usuarios/credenciales — público, verificación para pasarela
+    @POST
+    @Path("credenciales")
+    @PermitAll
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response verificarCredenciales(
+            @FormParam("username") String username,
+            @FormParam("password") String password) throws Exception {
+
+        Usuario usuario = servicio.login(username, password);
+        if (usuario == null) {
+            return Response.status(Response.Status.UNAUTHORIZED)
+                           .entity("Credenciales inválidas")
+                           .build();
+        }
+
+        Map<String, Object> respuesta = new HashMap<>();
+        respuesta.put("id", usuario.getId());
+        respuesta.put("nombre", usuario.getNombre());
+        respuesta.put("apellidos", usuario.getApellidos());
+        respuesta.put("admin", usuario.isAdmin());
+        respuesta.put("roles", usuario.isAdmin() ? "ADMINISTRADOR" : "USUARIO");
+
+        return Response.ok(respuesta).build();
     }
 
     // GET /usuarios/{id} — requiere autenticación
@@ -117,7 +145,13 @@ public class UsuariosControladorRest {
     public Response getUsuarioPorGithub(@PathParam("login") String login) throws Exception {
         try {
             Usuario usuario = servicio.buscarPorGithubLogin(login);
-            return Response.ok(UsuarioResumenDTO.fromEntity(usuario)).build();
+            Map<String, Object> respuesta = new HashMap<>();
+            respuesta.put("id", usuario.getId());
+            respuesta.put("nombre", usuario.getNombre());
+            respuesta.put("apellidos", usuario.getApellidos());
+            respuesta.put("admin", usuario.isAdmin());
+            respuesta.put("roles", usuario.isAdmin() ? "ADMINISTRADOR" : "USUARIO");
+            return Response.ok(respuesta).build();
         } catch (EntidadNoEncontrada e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

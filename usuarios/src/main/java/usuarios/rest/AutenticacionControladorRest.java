@@ -14,7 +14,6 @@ import servicio.FactoriaServicios;
 import usuarios.modelo.Usuario;
 import usuarios.servicio.IServicioUsuarios;
 
-@Path("auth")
 public class AutenticacionControladorRest {
 
     private static final String SECRET_KEY = "1ea4b589e0dc097269b0a67331ad32d130aabb80";

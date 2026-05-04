@@ -22,7 +22,7 @@ public class AutenticacionServicio {
     public Map<String, Object> verificarCredenciales(String username, String password) {
         try {
             retrofit2.Response<Map<String, Object>> resp =
-                cliente.login(username, password).execute();
+                cliente.verificarCredenciales(username, password).execute();
 
             if (resp.isSuccessful() && resp.body() != null) {
                 return resp.body();

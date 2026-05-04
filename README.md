@@ -18,6 +18,8 @@ Autores: **Irene Moreno** y **Juan Aledo**
 | `mysql` | MySQL 8 | `db_usuarios`, `db_productos` | 3306 |
 | `mongodb` | MongoDB | `db_compraventas` | 27017 |
 
+Nota: los scripts en `mysql/init.sql` solo se ejecutan en el primer arranque del volumen. Si necesitas reejecutarlos, elimina el volumen `mysql_data`.
+
 ***
 
 

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,7 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import io.jsonwebtoken.Claims;
+import java.util.Map;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -25,19 +26,41 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
+        String token = null;
         String authorization = request.getHeader("Authorization");
         if (authorization != null && authorization.startsWith("Bearer ")) {
+            token = authorization.substring("Bearer ".length()).trim();
+        }
+
+        if (token == null && request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("jwt".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (token != null) {
             try {
-                String token = authorization.substring("Bearer ".length()).trim();
-                Claims claims = JwtUtils.validateToken(token);
-                String[] roles = claims.get("roles", String.class).split(",");
+                Map<String, Object> claims = JwtUtils.parseClaims(token);
+                Object subObj = claims.get("sub");
+                String subject = subObj != null ? String.valueOf(subObj) : "";
+                String rolesValue = claims.get("roles") != null
+                        ? String.valueOf(claims.get("roles"))
+                        : "";
+                String[] roles = rolesValue.isEmpty() ? new String[0] : rolesValue.split(",");
+
+                if (subject.isBlank()) {
+                    throw new IllegalArgumentException("JWT sin subject");
+                }
 
                 ArrayList<GrantedAuthority> authorities = new ArrayList<>();
                 for (String rol : roles)
                     authorities.add(new SimpleGrantedAuthority(rol));
 
                 UsernamePasswordAuthenticationToken auth =
-                    new UsernamePasswordAuthenticationToken(claims.getSubject(), null, authorities);
+                    new UsernamePasswordAuthenticationToken(subject, null, authorities);
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
             } catch (Exception e) {

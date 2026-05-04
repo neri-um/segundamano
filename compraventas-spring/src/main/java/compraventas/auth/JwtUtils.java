@@ -1,16 +1,23 @@
 package compraventas.auth;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JwtUtils {
 
-    private static final String SECRET = "1ea4b589e0dc097269b0a67331ad32d130aabb80";
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    public static Claims validateToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET)
-                .parseClaimsJws(token)
-                .getBody();
+    public static Map<String, Object> parseClaims(String token) throws IOException {
+        String[] parts = token.split("\\.");
+        if (parts.length < 2) {
+            throw new IllegalArgumentException("JWT malformado");
+        }
+        String json = new String(Base64.getUrlDecoder().decode(parts[1]), StandardCharsets.UTF_8);
+        return MAPPER.readValue(json, new TypeReference<Map<String, Object>>() {});
     }
 }
