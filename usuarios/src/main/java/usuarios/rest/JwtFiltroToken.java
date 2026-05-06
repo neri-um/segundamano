@@ -20,7 +20,7 @@ import io.jsonwebtoken.Jwts;
 @Priority(Priorities.AUTHENTICATION)
 public class JwtFiltroToken implements ContainerRequestFilter {
 
-    private static final String SECRET_KEY = "1ea4b589e0dc097269b0a67331ad32d130aabb80";
+    private static final String SECRET_KEY = "claveSecretaSuperSegura123";
 
     @Context
     private ResourceInfo resourceInfo;

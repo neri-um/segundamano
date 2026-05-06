@@ -2,6 +2,7 @@ package pasarela.zuul.auth;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -14,8 +15,9 @@ public class JwtUtils {
 
     public static String generateToken(Map<String, Object> claims) {
         Date caducidad = Date.from(Instant.now().plusSeconds(TIEMPO));
+        Map<String, Object> mutableClaims = new HashMap<>(claims);
         return Jwts.builder()
-                .setClaims(claims)
+            .setClaims(mutableClaims)
                 .signWith(SignatureAlgorithm.HS256, SECRETO)
                 .setExpiration(caducidad)
                 .compact();
