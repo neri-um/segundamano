@@ -9,10 +9,12 @@ import usuarios.modelo.Usuario;
 
 public interface IServicioUsuarios {
 
-	String altaUsuario(String nombre, String apellidos, String email, String clave, LocalDate fechaNac, String telefono)
+	String altaUsuario(String nombre, String apellidos, String email, String clave, LocalDate fechaNac, String telefono,
+			String githubLogin)
 			throws RepositorioException;
 
-	void modificarUsuario(String id, String nombre, String apellidos, String clave, LocalDate fechaNac, String telefono)
+	void modificarUsuario(String id, String nombre, String apellidos, String clave, LocalDate fechaNac, String telefono,
+			String githubLogin)
 			throws RepositorioException, EntidadNoEncontrada;
 
 	Usuario recuperarUsuario(String id) throws RepositorioException, EntidadNoEncontrada;

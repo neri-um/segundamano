@@ -7,6 +7,7 @@ public class NuevoUsuarioDTO {
 	private String clave;
 	private String fechaNac;
 	private String telefono;
+	private String githubLogin;
 
 	public NuevoUsuarioDTO() {
 
@@ -58,5 +59,13 @@ public class NuevoUsuarioDTO {
 
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
+	}
+
+	public String getGithubLogin() {
+		return githubLogin;
+	}
+
+	public void setGithubLogin(String githubLogin) {
+		this.githubLogin = githubLogin;
 	}
 }

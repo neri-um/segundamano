@@ -15,12 +15,12 @@ public class PruebaUsuarios {
         String idUsuario = servicio.altaUsuario(
             "Juan", "García López",
             "juan@example.com", "clave123",
-            LocalDate.of(2003, 5, 15), "612345678"
+            LocalDate.of(2003, 5, 15), "612345678", null
         );
         System.out.println("Usuario creado con ID: " + idUsuario);
 
         // Modificar usuario
-        servicio.modificarUsuario(idUsuario, "Juan Antonio", null, null, null, null);
+        servicio.modificarUsuario(idUsuario, "Juan Antonio", null, null, null, null, null);
         System.out.println("Usuario modificado correctamente.");
 
         System.out.println("fin.");

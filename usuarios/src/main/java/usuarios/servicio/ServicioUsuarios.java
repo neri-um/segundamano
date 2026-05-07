@@ -20,7 +20,7 @@ public class ServicioUsuarios implements IServicioUsuarios{
     
 	@Override
 	public String altaUsuario(String nombre, String apellidos, String email, String clave, LocalDate fechaNac,
-			String telefono) throws RepositorioException {
+			String telefono, String githubLogin) throws RepositorioException {
 	    if (nombre == null || nombre.trim().isEmpty()) {
 	        throw new IllegalArgumentException("ERROR: El nombre es obligatorio");
 	    }
@@ -50,13 +50,17 @@ public class ServicioUsuarios implements IServicioUsuarios{
 	        //no existe, podemos continuar
 	    }
 	    Usuario u = new Usuario(email, nombre, apellidos, clave, fechaNac, telefono);
+	    if (githubLogin != null && !githubLogin.trim().isEmpty()) {
+	        u.setGithubLogin(githubLogin);
+	    }
 		String id = repositorio.add(u);
 		publicador.usuarioCreado(u.getId(), u.getNombre(), u.getApellidos(), u.getEmail());
 		return id;
 	}
 
 	@Override
-	public void modificarUsuario(String id, String nombre, String apellidos, String clave, LocalDate fechaNac, String telefono) throws RepositorioException, EntidadNoEncontrada {
+	public void modificarUsuario(String id, String nombre, String apellidos, String clave, LocalDate fechaNac,
+			String telefono, String githubLogin) throws RepositorioException, EntidadNoEncontrada {
 	    
 	    if (id == null || id.trim().isEmpty()) {
 	        throw new IllegalArgumentException("ERROR: El ID de usuario es obligatorio");
@@ -85,6 +89,9 @@ public class ServicioUsuarios implements IServicioUsuarios{
 	             throw new IllegalArgumentException("ERROR: El teléfono debe tener al menos 9 dígitos");
 	        }
 	        usuario.setTelefono(telefono);
+	    }
+	    if (githubLogin != null && !githubLogin.trim().isEmpty()) {
+	        usuario.setGithubLogin(githubLogin);
 	    }
 	    repositorio.update(usuario);
 	    publicador.usuarioModificado(

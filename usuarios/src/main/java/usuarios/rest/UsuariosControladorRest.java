@@ -46,7 +46,7 @@ public class UsuariosControladorRest {
         String id = servicio.altaUsuario(
             nuevoUsuario.getNombre(), nuevoUsuario.getApellidos(),
             nuevoUsuario.getEmail(), nuevoUsuario.getClave(),
-            fecha, nuevoUsuario.getTelefono()
+            fecha, nuevoUsuario.getTelefono(), nuevoUsuario.getGithubLogin()
         );
         URI nuevaURL = uriInfo.getAbsolutePathBuilder().path(id).build();
         return Response.created(nuevaURL)
@@ -109,7 +109,7 @@ public class UsuariosControladorRest {
 
         servicio.modificarUsuario(
             id, datos.getNombre(), datos.getApellidos(),
-            datos.getClave(), fecha, datos.getTelefono()
+            datos.getClave(), fecha, datos.getTelefono(), datos.getGithubLogin()
         );
         return Response.status(Response.Status.NO_CONTENT).build();
     }
