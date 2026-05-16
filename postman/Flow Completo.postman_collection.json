@@ -1,0 +1,1732 @@
+{
+  "info": {
+    "_postman_id": "8198189a-896d-4f37-a221-c351af0a50a6",
+    "name": "Flow Completo",
+    "description": "Coleccion con flujo setup -> login -> pruebas para usuarios.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52309134",
+    "_collection_link": "https://go.postman.co/collection/52309134-8198189a-896d-4f37-a221-c351af0a50a6?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "00 Setup y login",
+      "item": [
+        {
+          "name": "Usuarios - Alta vendedor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201 o 400 por duplicado (vendedor)\", function () {",
+                  "  pm.expect([201, 400]).to.include(pm.response.code);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellidos\": \"Aledo\",\n  \"email\": \"{{email_vendedor}}\",\n  \"clave\": \"{{password_vendedor}}\",\n  \"fechaNac\": \"2000-01-01\",\n  \"telefono\": \"600000001\"\n}"
+            },
+            "url": {
+              "raw": "{{usuariosBaseUrl}}/usuarios",
+              "host": [
+                "{{usuariosBaseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Usuarios - Alta comprador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201 o 400 por duplicado (comprador)\", function () {",
+                  "  pm.expect([201, 400]).to.include(pm.response.code);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Laura\",\n  \"apellidos\": \"Garcia\",\n  \"email\": \"{{email_comprador}}\",\n  \"clave\": \"{{password_comprador}}\",\n  \"fechaNac\": \"2001-02-02\",\n  \"telefono\": \"600000002\"\n}"
+            },
+            "url": {
+              "raw": "{{usuariosBaseUrl}}/usuarios",
+              "host": [
+                "{{usuariosBaseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pasarela - Login vendedor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 login vendedor\", function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"token e id vendedor\", function () {",
+                  "  pm.expect(data).to.have.property(\"token\");",
+                  "  pm.expect(data).to.have.property(\"identificador\");",
+                  "});",
+                  "pm.test(\"nombre y roles vendedor\", function () {",
+                  "  pm.expect(data).to.have.property(\"nombre\");",
+                  "  pm.expect(data).to.have.property(\"roles\");",
+                  "});",
+                  "const setCookie = pm.response.headers.get(\"Set-Cookie\") || \"\";",
+                  "pm.test(\"cookie jwt httpOnly\", function () {",
+                  "  pm.expect(setCookie).to.include(\"jwt=\");",
+                  "  pm.expect(setCookie.toLowerCase()).to.include(\"httponly\");",
+                  "});",
+                  "pm.environment.set(\"token_vendedor\", data.token);",
+                  "pm.environment.set(\"idVendedor\", data.identificador);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "{{email_vendedor}}",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_vendedor}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{pasarelaBaseUrl}}{{pasarelaLoginPath}}",
+              "host": [
+                "{{pasarelaBaseUrl}}{{pasarelaLoginPath}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pasarela - Login comprador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 login comprador\", function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"token e id comprador\", function () {",
+                  "  pm.expect(data).to.have.property(\"token\");",
+                  "  pm.expect(data).to.have.property(\"identificador\");",
+                  "});",
+                  "pm.test(\"nombre y roles comprador\", function () {",
+                  "  pm.expect(data).to.have.property(\"nombre\");",
+                  "  pm.expect(data).to.have.property(\"roles\");",
+                  "});",
+                  "const setCookie = pm.response.headers.get(\"Set-Cookie\") || \"\";",
+                  "pm.test(\"cookie jwt httpOnly\", function () {",
+                  "  pm.expect(setCookie).to.include(\"jwt=\");",
+                  "  pm.expect(setCookie.toLowerCase()).to.include(\"httponly\");",
+                  "});",
+                  "pm.environment.set(\"token_comprador\", data.token);",
+                  "pm.environment.set(\"idComprador\", data.identificador);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "{{email_comprador}}",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_comprador}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{pasarelaBaseUrl}}{{pasarelaLoginPath}}",
+              "host": [
+                "{{pasarelaBaseUrl}}{{pasarelaLoginPath}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pasarela - Login admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 login admin\", function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"token e id admin\", function () {",
+                  "  pm.expect(data).to.have.property(\"token\");",
+                  "  pm.expect(data).to.have.property(\"identificador\");",
+                  "});",
+                  "pm.test(\"nombre y roles admin\", function () {",
+                  "  pm.expect(data).to.have.property(\"nombre\");",
+                  "  pm.expect(data).to.have.property(\"roles\");",
+                  "});",
+                  "const setCookie = pm.response.headers.get(\"Set-Cookie\") || \"\";",
+                  "pm.test(\"cookie jwt httpOnly\", function () {",
+                  "  pm.expect(setCookie).to.include(\"jwt=\");",
+                  "  pm.expect(setCookie.toLowerCase()).to.include(\"httponly\");",
+                  "});",
+                  "pm.environment.set(\"token_admin\", data.token);",
+                  "pm.environment.set(\"idAdmin\", data.identificador);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "{{email_admin}}",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_admin}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{pasarelaBaseUrl}}{{pasarelaLoginPath}}",
+              "host": [
+                "{{pasarelaBaseUrl}}{{pasarelaLoginPath}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "10 Usuarios",
+      "item": [
+        {
+          "name": "GET /usuarios (listado)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 listado usuarios\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_vendedor}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{usuariosBaseUrl}}/usuarios",
+              "host": [
+                "{{usuariosBaseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /usuarios/{id}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 get usuario\", function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"id coincide\", function () {",
+                  "  pm.expect(data.id).to.equal(pm.environment.get(\"idVendedor\"));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_vendedor}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{usuariosBaseUrl}}/usuarios/{{idVendedor}}",
+              "host": [
+                "{{usuariosBaseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "{{idVendedor}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /usuarios/{id}",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const suffix = Math.floor(Math.random() * 900 + 100);",
+                  "pm.environment.set(\"updatedNombre\", \"VendedorPatch\" + suffix);",
+                  "pm.environment.set(\"updatedTelefono\", \"600\" + suffix + \"123\");"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"204 patch usuario\", function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_vendedor}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"{{updatedNombre}}\",\n  \"telefono\": \"{{updatedTelefono}}\",\n  \"githubLogin\": \"{{github_login}}\"\n}"
+            },
+            "url": {
+              "raw": "{{usuariosBaseUrl}}/usuarios/{{idVendedor}}",
+              "host": [
+                "{{usuariosBaseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "{{idVendedor}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /usuarios/{id} (verificar cambios)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 get usuario actualizado\", function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"campos actualizados\", function () {",
+                  "  pm.expect(data.nombre).to.equal(pm.environment.get(\"updatedNombre\"));",
+                  "  pm.expect(data.telefono).to.equal(pm.environment.get(\"updatedTelefono\"));",
+                  "});",
+                  "const login = (pm.environment.get(\"github_login\") || \"\").trim();",
+                  "if (login) {",
+                  "  pm.test(\"githubLogin actualizado\", function () {",
+                  "    pm.expect(data.githubLogin).to.equal(login);",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_vendedor}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{usuariosBaseUrl}}/usuarios/{{idVendedor}}",
+              "host": [
+                "{{usuariosBaseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "{{idVendedor}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /usuarios/{id}/publico",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 get usuario publico\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{usuariosBaseUrl}}/usuarios/{{idVendedor}}/publico",
+              "host": [
+                "{{usuariosBaseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "{{idVendedor}}",
+                "publico"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /usuarios/github/{login}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const login = (pm.environment.get(\"github_login\") || \"\").trim();",
+                  "if (login) {",
+                  "  pm.test(\"200 github login existente\", function () { pm.response.to.have.status(200); });",
+                  "  const data = pm.response.json();",
+                  "  pm.test(\"respuesta contiene id\", function () { pm.expect(data).to.have.property(\"id\"); });",
+                  "} else {",
+                  "  pm.test(\"404 github login opcional\", function () { pm.response.to.have.status(404); });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{usuariosBaseUrl}}/usuarios/github/{{github_login}}",
+              "host": [
+                "{{usuariosBaseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "github",
+                "{{github_login}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /usuarios/credenciales",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 credenciales\", function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"id y roles\", function () {",
+                  "  pm.expect(data).to.have.property(\"id\");",
+                  "  pm.expect(data).to.have.property(\"roles\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "{{email_vendedor}}",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password_vendedor}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{usuariosBaseUrl}}/usuarios/credenciales",
+              "host": [
+                "{{usuariosBaseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "credenciales"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "20 Productos",
+      "item": [
+        {
+          "name": "POST /productos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201 alta producto\", function () { pm.response.to.have.status(201); });",
+                  "const data = pm.response.json();",
+                  "if (data && data.id) { pm.environment.set(\"idProducto\", data.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_vendedor}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Producto Postman\",\n  \"descripcion\": \"Generado para pruebas\",\n  \"precio\": 99.99,\n  \"estado\": \"BUEN_ESTADO\",\n  \"fechaPublicacion\": \"2026-05-07T12:00:00\",\n  \"categoria\": \"{{idCategoria}}\",\n  \"envio\": true,\n  \"lugarRecogida\": \"Sevilla\",\n  \"latitud\": 37.3891,\n  \"longitud\": -5.9845,\n  \"idVendedor\": \"{{idVendedor}}\"\n}"
+            },
+            "url": {
+              "raw": "{{productosBaseUrl}}/productos",
+              "host": [
+                "{{productosBaseUrl}}"
+              ],
+              "path": [
+                "productos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /productos/{id}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 get producto\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{productosBaseUrl}}/productos/{{idProducto}}",
+              "host": [
+                "{{productosBaseUrl}}"
+              ],
+              "path": [
+                "productos",
+                "{{idProducto}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /productos/{id}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"204 patch producto\", function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_vendedor}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"precio\": 88.5,\n  \"descripcion\": \"Actualizado por postman\"\n}"
+            },
+            "url": {
+              "raw": "{{productosBaseUrl}}/productos/{{idProducto}}",
+              "host": [
+                "{{productosBaseUrl}}"
+              ],
+              "path": [
+                "productos",
+                "{{idProducto}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /productos/{id}/recogida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"204 recogida\", function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_vendedor}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"latitud\": 37.3891,\n  \"longitud\": -5.9845,\n  \"descripcion\": \"Sevilla centro\"\n}"
+            },
+            "url": {
+              "raw": "{{productosBaseUrl}}/productos/{{idProducto}}/recogida",
+              "host": [
+                "{{productosBaseUrl}}"
+              ],
+              "path": [
+                "productos",
+                "{{idProducto}}",
+                "recogida"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /productos/{id}/visualizaciones",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"204 visualizaciones\", function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{productosBaseUrl}}/productos/{{idProducto}}/visualizaciones",
+              "host": [
+                "{{productosBaseUrl}}"
+              ],
+              "path": [
+                "productos",
+                "{{idProducto}}",
+                "visualizaciones"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /productos/historial",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 historial\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{productosBaseUrl}}/productos/historial?anyo={{anyoHistorial}}&mes={{mesHistorial}}",
+              "host": [
+                "{{productosBaseUrl}}"
+              ],
+              "path": [
+                "productos",
+                "historial"
+              ],
+              "query": [
+                {
+                  "key": "anyo",
+                  "value": "{{anyoHistorial}}"
+                },
+                {
+                  "key": "mes",
+                  "value": "{{mesHistorial}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /productos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 listar productos\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{productosBaseUrl}}/productos",
+              "host": [
+                "{{productosBaseUrl}}"
+              ],
+              "path": [
+                "productos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /categorias",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 categorias raiz\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{productosBaseUrl}}/categorias",
+              "host": [
+                "{{productosBaseUrl}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /categorias/{id}/descendientes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 categorias descendientes\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{productosBaseUrl}}/categorias/{{idCategoria}}/descendientes",
+              "host": [
+                "{{productosBaseUrl}}"
+              ],
+              "path": [
+                "categorias",
+                "{{idCategoria}}",
+                "descendientes"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "30 Compraventas",
+      "item": [
+        {
+          "name": "POST /compraventas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201 compraventa creada o 400 si ya existe\", function () {",
+                  "  pm.expect([201, 400]).to.include(pm.response.code);",
+                  "});",
+                  "if (pm.response.code === 201) {",
+                  "  const location = pm.response.headers.get(\"Location\") || \"\";",
+                  "  const match = location.match(/\\/([^\\/]+)$/);",
+                  "  if (match && match[1]) { pm.environment.set(\"idCompraventa\", match[1]); }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_comprador}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idProducto\": \"{{idProducto}}\",\n  \"idComprador\": \"{{idComprador}}\"\n}"
+            },
+            "url": {
+              "raw": "{{compraventasBaseUrl}}/compraventas",
+              "host": [
+                "{{compraventasBaseUrl}}"
+              ],
+              "path": [
+                "compraventas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /compraventas/{id}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const id = pm.environment.get(\"idCompraventa\") || \"\";",
+                  "if (id) {",
+                  "  pm.test(\"200 get compraventa\", function () { pm.response.to.have.status(200); });",
+                  "} else {",
+                  "  pm.test(\"404 sin id de compraventa\", function () { pm.response.to.have.status(404); });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_comprador}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{compraventasBaseUrl}}/compraventas/{{idCompraventa}}",
+              "host": [
+                "{{compraventasBaseUrl}}"
+              ],
+              "path": [
+                "compraventas",
+                "{{idCompraventa}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /compraventas/comprador/{idComprador}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 compras comprador\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_comprador}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{compraventasBaseUrl}}/compraventas/comprador/{{idComprador}}",
+              "host": [
+                "{{compraventasBaseUrl}}"
+              ],
+              "path": [
+                "compraventas",
+                "comprador",
+                "{{idComprador}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /compraventas/vendedor/{idVendedor}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 ventas vendedor\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_vendedor}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{compraventasBaseUrl}}/compraventas/vendedor/{{idVendedor}}",
+              "host": [
+                "{{compraventasBaseUrl}}"
+              ],
+              "path": [
+                "compraventas",
+                "vendedor",
+                "{{idVendedor}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /compraventas/comprador/{idComprador}/vendedor/{idVendedor}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 compraventas admin\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_admin}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{compraventasBaseUrl}}/compraventas/comprador/{{idComprador}}/vendedor/{{idVendedor}}",
+              "host": [
+                "{{compraventasBaseUrl}}"
+              ],
+              "path": [
+                "compraventas",
+                "comprador",
+                "{{idComprador}}",
+                "vendedor",
+                "{{idVendedor}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "50 Pasarela",
+      "item": [
+        {
+          "name": "Pasarela - Login invalido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"401 login invalido\", function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "{{email_vendedor}}",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "__bad_password__",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{pasarelaBaseUrl}}{{pasarelaLoginPath}}",
+              "host": [
+                "{{pasarelaBaseUrl}}{{pasarelaLoginPath}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pasarela - OAuth2 GitHub (inicio)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"200 o 302 oauth2\", function () { pm.expect([200, 302]).to.include(pm.response.code); });",
+                  "const location = pm.response.headers.get(\"Location\") || \"\";",
+                  "const finalUrl = pm.response.url || \"\";",
+                  "pm.test(\"redirige a github\", function () {",
+                  "    pm.response.to.have.status(302);",
+                  "    pm.expect(pm.response.headers.get(\"Location\")).to.include(\"github.com\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "followRedirects": false
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{pasarelaBaseUrl}}/oauth2/authorization/github",
+              "host": [
+                "{{pasarelaBaseUrl}}"
+              ],
+              "path": [
+                "oauth2",
+                "authorization",
+                "github"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pasarela - Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"204 logout\", function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_vendedor}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{pasarelaBaseUrl}}/auth/logout",
+              "host": [
+                "{{pasarelaBaseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pasarela - Proxy usuarios (GET /usuarios)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 proxy usuarios\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_vendedor}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{pasarelaBaseUrl}}/usuarios/api/usuarios",
+              "host": [
+                "{{pasarelaBaseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "api",
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pasarela - Proxy productos (GET /productos)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 proxy productos\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_vendedor}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{pasarelaBaseUrl}}/productos/productos",
+              "host": [
+                "{{pasarelaBaseUrl}}"
+              ],
+              "path": [
+                "productos",
+                "productos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pasarela - Proxy compraventas (GET /compraventas/comprador/{idComprador})",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 proxy compraventas comprador\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_comprador}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{pasarelaBaseUrl}}/compraventas/api/compraventas/comprador/{{idComprador}}",
+              "host": [
+                "{{pasarelaBaseUrl}}"
+              ],
+              "path": [
+                "compraventas",
+                "api",
+                "compraventas",
+                "comprador",
+                "{{idComprador}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "90 Negativos",
+      "item": [
+        {
+          "name": "GET /usuarios sin token (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"401 sin token\", function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{usuariosBaseUrl}}/usuarios",
+              "host": [
+                "{{usuariosBaseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /usuarios con otro usuario (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"403 por usuario distinto\", function () { pm.response.to.have.status(403); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_comprador}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"699999999\"\n}"
+            },
+            "url": {
+              "raw": "{{usuariosBaseUrl}}/usuarios/{{idVendedor}}",
+              "host": [
+                "{{usuariosBaseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "{{idVendedor}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /productos con otro vendedor (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"403 patch producto otro vendedor\", function () { pm.response.to.have.status(403); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_comprador}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"precio\": 77.0\n}"
+            },
+            "url": {
+              "raw": "{{productosBaseUrl}}/productos/{{idProducto}}",
+              "host": [
+                "{{productosBaseUrl}}"
+              ],
+              "path": [
+                "productos",
+                "{{idProducto}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /compraventas/comprador con otro token (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"403 compras otro usuario\", function () { pm.response.to.have.status(403); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_vendedor}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{compraventasBaseUrl}}/compraventas/comprador/{{idComprador}}",
+              "host": [
+                "{{compraventasBaseUrl}}"
+              ],
+              "path": [
+                "compraventas",
+                "comprador",
+                "{{idComprador}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /compraventas/vendedor con otro token (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"403 ventas otro usuario\", function () { pm.response.to.have.status(403); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_comprador}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{compraventasBaseUrl}}/compraventas/vendedor/{{idVendedor}}",
+              "host": [
+                "{{compraventasBaseUrl}}"
+              ],
+              "path": [
+                "compraventas",
+                "vendedor",
+                "{{idVendedor}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /compraventas con comprador distinto (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"403 comprador distinto\", function () { pm.response.to.have.status(403); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_vendedor}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idProducto\": \"{{idProducto}}\",\n  \"idComprador\": \"{{idComprador}}\"\n}"
+            },
+            "url": {
+              "raw": "{{compraventasBaseUrl}}/compraventas",
+              "host": [
+                "{{compraventasBaseUrl}}"
+              ],
+              "path": [
+                "compraventas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /productos/{id}/recogida con otro usuario (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"403 recogida otro usuario\", function () { pm.response.to.have.status(403); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_comprador}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"latitud\": 37.3891,\n  \"longitud\": -5.9845,\n  \"descripcion\": \"Intento no autorizado\"\n}"
+            },
+            "url": {
+              "raw": "{{productosBaseUrl}}/productos/{{idProducto}}/recogida",
+              "host": [
+                "{{productosBaseUrl}}"
+              ],
+              "path": [
+                "productos",
+                "{{idProducto}}",
+                "recogida"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "usuariosBaseUrl",
+      "value": "http://localhost:8081/api"
+    },
+    {
+      "key": "productosBaseUrl",
+      "value": "http://localhost:9090"
+    },
+    {
+      "key": "pasarelaBaseUrl",
+      "value": "http://localhost:8090"
+    },
+    {
+      "key": "pasarelaLoginPath",
+      "value": "/auth/login"
+    },
+    {
+      "key": "compraventasBaseUrl",
+      "value": "http://localhost:8083/api"
+    }
+  ]
+}
